@@ -2,13 +2,14 @@
 
 > **Interaction sounds for the web. Synthesized live. Zero bytes shipped.**
 
-[![npm version](https://img.shields.io/npm/v/sonicflow?style=flat-square&color=22c55e)](https://www.npmjs.com/package/sonicflow)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/sonicflow?style=flat-square&color=22c55e&label=gzip)](https://bundlephobia.com/package/sonicflow)
-[![license](https://img.shields.io/npm/l/sonicflow?style=flat-square&color=22c55e)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-cues.uxasim.com-22c55e?style=flat-square&logo=vercel)](https://cues.uxasim.com/)
+[![GitHub stars](https://img.shields.io/github/stars/uxasim-rgb/sonicflow?style=flat-square&color=22c55e)](https://github.com/uxasim-rgb/sonicflow)
+[![GitHub forks](https://img.shields.io/github/forks/uxasim-rgb/sonicflow?style=flat-square&color=22c55e)](https://github.com/uxasim-rgb/sonicflow)
+[![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](LICENSE)
+
+🔗 **Live Demo:** [cues.uxasim.com](https://cues.uxasim.com/)
 
 SonicFlow is a premium library of **84 UI interaction sounds** for the modern web. Every cue is synthesized in real-time using the Web Audio API — no samples, no network requests, no loading states. Just import, bind, and listen.
-
-🔗 **Live Demo:** [uxasim.com/sonicflow](http://uxasim.com/sonicflow)
 
 ---
 
@@ -254,6 +255,8 @@ npm run dev
 ## 🙏 Credits
 
 Created by [Asim](http://uxasim.com/) — Designer & Developer crafting interfaces that sound as good as they feel.
+
+🔗 **Live Demo:** [cues.uxasim.com](https://cues.uxasim.com/)
 
 ---
 
