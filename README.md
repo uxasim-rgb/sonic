@@ -8,6 +8,8 @@
 
 SonicFlow is a premium library of **84 UI interaction sounds** for the modern web. Every cue is synthesized in real-time using the Web Audio API — no samples, no network requests, no loading states. Just import, bind, and listen.
 
+🔗 **Live Demo:** [uxasim.com/sonicflow](http://uxasim.com/sonicflow)
+
 ---
 
 ## ✨ Why SonicFlow?
@@ -241,7 +243,7 @@ synthesize({
 We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
 
 ```bash
-git clone https://github.com/yourname/sonicflow.git
+git clone https://github.com/uxasim-rgb/sonicflow.git
 cd sonicflow
 npm install
 npm run dev
@@ -249,9 +251,15 @@ npm run dev
 
 ---
 
+## 🙏 Credits
+
+Created by [Asim](http://uxasim.com/) — Designer & Developer crafting interfaces that sound as good as they feel.
+
+---
+
 ## 📄 License
 
-MIT © [Your Name](https://github.com/yourname)
+MIT © [Asim](http://uxasim.com/)
 
 ---
 
