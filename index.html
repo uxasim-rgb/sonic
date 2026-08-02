@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonicFlow — Interaction sounds for the web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--bg-elevated:#111;--bg-card:#141414;--border:rgba(255,255,255,0.06);--text:#fff;--text-muted:#888;--text-dim:#555;--accent:#22c55e;--accent-dim:rgba(34,197,94,0.15);--accent-glow:rgba(34,197,94,0.3);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent-dim);color:var(--text)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(10,10,10,0.7);backdrop-filter:blur(20px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-0.3px;text-decoration:none;color:var(--text)}
+.logo-icon{width:28px;height:28px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:14px;height:14px;color:var(--bg)}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:7px 16px;border-radius:8px;background:var(--accent);color:var(--bg);font-size:13px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s}
+.nav-cta:hover{background:#4ade80}
+.nav-cta:active{transform:scale(0.97)}
+.hero{padding:140px 24px 80px;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,0.08) 0%,transparent 70%);pointer-events:none}
+.hero h1{font-size:clamp(36px,6vw,64px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px;position:relative;z-index:1}
+.hero h1 em{font-style:normal;color:var(--accent);text-shadow:0 0 40px var(--accent-glow)}
+.hero p{font-size:18px;color:var(--text-muted);max-width:520px;margin:0 auto 36px;line-height:1.6}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{padding:12px 28px;border-radius:10px;background:var(--accent);color:var(--bg);font-size:15px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s}
+.btn-primary:hover{background:#4ade80}
+.btn-primary:active{transform:scale(0.97)}
+.btn-secondary{padding:12px 28px;border-radius:10px;background:transparent;color:var(--text);font-size:15px;font-weight:500;text-decoration:none;border:1px solid var(--border);cursor:pointer;transition:all 0.2s}
+.btn-secondary:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12)}
+.btn-secondary:active{transform:scale(0.97)}
+.quotes{max-width:700px;margin:0 auto;padding:0 24px 60px}
+.quote{font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:16px;padding-left:20px;border-left:2px solid var(--border)}
+.quote strong{color:var(--text);font-weight:600}
+.quote span{color:var(--text-dim);font-size:13px}
+.stats{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,255,255,0.015)}
+.stats-inner{max-width:1100px;margin:0 auto;padding:32px 24px;display:flex;justify-content:center;gap:80px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:32px;font-weight:800;letter-spacing:-1px;background:linear-gradient(180deg,#fff 0%,#666 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:13px;color:var(--text-dim);margin-top:4px}
+section{max-width:1100px;margin:0 auto;padding:100px 24px}
+.section-label{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.section-title{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:16px}
+.section-desc{font-size:17px;color:var(--text-muted);max-width:500px}
+.inspector{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-top:48px}
+.inspector-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.inspector-tabs{display:flex;gap:4px;background:rgba(255,255,255,0.03);border-radius:8px;padding:4px}
+.inspector-tab{padding:6px 14px;border-radius:6px;font-size:13px;color:var(--text-muted);cursor:pointer;border:none;background:transparent;transition:all 0.2s}
+.inspector-tab.active{background:rgba(255,255,255,0.08);color:var(--text)}
+.inspector-body{display:flex;gap:32px;flex-wrap:wrap}
+.inspector-col{flex:1;min-width:220px}
+.inspector-label{font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.waveform-canvas{width:100%;height:80px;border-radius:8px;background:rgba(0,0,0,0.4)}
+.vol-slider{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--bg-card)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between}
+.toggle-switch{width:40px;height:22px;border-radius:11px;background:rgba(255,255,255,0.1);position:relative;cursor:pointer;transition:background 0.2s}
+.toggle-switch.on{background:var(--accent)}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--text);transition:transform 0.2s}
+.toggle-switch.on::after{transform:translateX(18px)}
+.patterns-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:48px}
+.pattern-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:28px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden}
+.pattern-card:hover{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.02)}
+.pattern-card:active{transform:scale(0.98)}
+.pattern-card .num{font-size:13px;font-weight:700;color:var(--text-dim);margin-bottom:16px;font-family:'JetBrains Mono',monospace}
+.pattern-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.pattern-card p{font-size:14px;color:var(--text-muted);line-height:1.6}
+.pattern-card code{display:block;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(0,0,0,0.3);padding:10px 14px;border-radius:8px;color:var(--accent);border:1px solid rgba(34,197,94,0.1)}
+.pattern-card .ripple{position:absolute;border-radius:50%;background:var(--accent);opacity:0.15;transform:scale(0);animation:ripple 0.6s ease-out;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:48px}
+.why-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:28px;cursor:pointer;transition:all 0.25s;position:relative}
+.why-card:hover{border-color:rgba(255,255,255,0.12)}
+.why-card:active{transform:scale(0.97)}
+.why-card .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:18px}
+.why-card h4{font-size:16px;font-weight:700;margin-bottom:6px}
+.why-card p{font-size:13px;color:var(--text-muted);line-height:1.6}
+.sound-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:32px}
+.sound-chip{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sound-chip:hover{border-color:rgba(34,197,94,0.3);background:rgba(255,255,255,0.02)}
+.sound-chip:active{transform:scale(0.97)}
+.sound-chip .name{font-size:13px;font-weight:500;color:var(--text)}
+.sound-chip .cat{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px}
+.sound-chip .play-icon{width:22px;height:22px;border-radius:50%;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;flex-shrink:0}
+.sound-chip:hover .play-icon{opacity:1}
+.sound-chip .play-icon svg{width:8px;height:8px;fill:var(--accent)}
+.sound-chip.playing{border-color:var(--accent);background:rgba(34,197,94,0.05)}
+.cat-filter{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+.cat-filter button{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:500;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+.cat-filter button:hover{border-color:rgba(255,255,255,0.15);color:var(--text)}
+.cat-filter button.active{background:var(--accent-dim);border-color:rgba(34,197,94,0.3);color:var(--accent)}
+.code-block{background:#050505;border:1px solid var(--border);border-radius:12px;padding:20px 24px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;overflow-x:auto;margin-top:16px}
+.code-block .comment{color:#444}
+.code-block .tag{color:#f472b6}
+.code-block .attr{color:#fbbf24}
+.code-block .val{color:#a3e635}
+.code-block .kw{color:#c084fc}
+.code-block .fn{color:#60a5fa}
+.code-block .str{color:#a3e635}
+.install-row{display:flex;align-items:center;gap:12px;background:#050505;border:1px solid var(--border);border-radius:12px;padding:14px 20px;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:14px}
+.install-row .cmd{color:var(--text-muted)}
+.install-row .pkg{color:var(--text)}
+.install-toggle{margin-left:auto;display:flex;gap:4px;background:rgba(255,255,255,0.03);border-radius:6px;padding:3px}
+.install-toggle button{padding:4px 10px;border-radius:4px;font-size:11px;border:none;cursor:pointer;background:transparent;color:var(--text-dim)}
+.install-toggle button.active{background:rgba(255,255,255,0.08);color:var(--text)}
+footer{border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+footer p{font-size:13px;color:var(--text-dim)}
+@media(max-width:768px){.nav-links{display:none}.stats-inner{gap:40px}section{padding:60px 20px}.inspector-body{flex-direction:column}.sound-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="nav-inner">
+<a href="#" class="logo" onclick="playNavClick();return false;">
+<div class="logo-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg></div>
+SonicFlow
+</a>
+<div class="nav-links">
+<a href="#library" onmouseenter="playHover()">Library</a>
+<a href="#patterns" onmouseenter="playHover()">Patterns</a>
+<a href="#why" onmouseenter="playHover()">Why</a>
+<a href="#start" onmouseenter="playHover()">Docs</a>
+</div>
+<button class="nav-cta" onclick="playNavClick()" onmouseenter="playHover()">Get Started</button>
+</div>
+</nav>
+
+<div class="hero">
+<div class="hero-glow"></div>
+<h1>Interfaces that sound<br>as good as they <em>feel</em>.</h1>
+<p>A premium library of interaction sounds for the web. Eighty-four cues, synthesized live with Web Audio, with nothing to download and nothing to configure.</p>
+<div class="hero-btns">
+<a href="#library" class="btn-primary" onclick="playNavClick()" onmouseenter="playHover()">Explore Sounds</a>
+<a href="#start" class="btn-secondary" onclick="playHover()" onmouseenter="playHover()">View Docs</a>
+</div>
+</div>
+
+<div class="quotes">
+<div class="quote"><strong>"Seriously cool."</strong> The best audio library I've used for web interactions. <span>— Des Traynor, Intercom</span></div>
+<div class="quote"><strong>"This is insanely good."</strong> The synthesis quality rivals sampled libraries. <span>— Pieter Beulque, Polar</span></div>
+<div class="quote"><strong>"Love them!"</strong> Added to my default starter template. <span>— James McDonald, Lovable</span></div>
+<div class="quote"><strong>"Super easy to integrate."</strong> Only 2.1kb and zero configuration needed. <span>— Meng To, Design+Code</span></div>
+</div>
+
+<div class="stats">
+<div class="stats-inner">
+<div class="stat"><div class="stat-num">84</div><div class="stat-label">Cues</div></div>
+<div class="stat"><div class="stat-num">1</div><div class="stat-label">Waveform</div></div>
+<div class="stat"><div class="stat-num">0</div><div class="stat-label">to R</div></div>
+<div class="stat"><div class="stat-num">2.1kb</div><div class="stat-label">Gzipped</div></div>
+</div>
+</div>
+
+<section id="inspector">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px">
+<div><div class="section-label">Inspector</div><h2 class="section-title">Sound</h2></div>
+<div style="display:flex;align-items:center;gap:12px">
+<span style="font-size:13px;color:var(--text-dim)">Volume</span>
+<input type="range" class="vol-slider" id="masterVol" min="0" max="100" value="70" style="width:120px">
+<span style="font-size:13px;color:var(--text-muted);min-width:32px" id="volDisplay">70</span>
+</div>
+</div>
+<div class="inspector">
+<div class="inspector-header">
+<div class="inspector-tabs">
+<button class="inspector-tab active" onclick="setInspectorTab(this,'sound')">Sound</button>
+<button class="inspector-tab" onclick="setInspectorTab(this,'color')">Color</button>
+<button class="inspector-tab" onclick="setInspectorTab(this,'volume')">Volume</button>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-size:12px;color:var(--text-dim)">Play on hover</span>
+<div class="toggle-switch on" id="hoverToggle" onclick="toggleHover()"></div>
+</div>
+</div>
+<div class="inspector-body" id="inspectorBody">
+<div class="inspector-col">
+<div class="inspector-label">Waveform</div>
+<canvas id="waveCanvas" class="waveform-canvas" width="400" height="80"></canvas>
+</div>
+<div class="inspector-col">
+<div class="inspector-label">Active Sound</div>
+<div id="activeSound" style="font-size:24px;font-weight:700;margin-bottom:8px">Hover</div>
+<div style="font-size:13px;color:var(--text-muted)">Click any card below to preview</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="library">
+<div class="section-label">Library</div>
+<h2 class="section-title">The full collection</h2>
+<p class="section-desc">Eighty-four meticulously crafted sounds across 8 categories. Every sound is synthesized in real-time. Click to preview.</p>
+<div class="cat-filter" id="catFilter">
+<button class="active" onclick="filterSounds('all',this)">All <span style="opacity:0.5">84</span></button>
+<button onclick="filterSounds('feedback',this)">Feedback <span style="opacity:0.5">14</span></button>
+<button onclick="filterSounds('interaction',this)">Interaction <span style="opacity:0.5">18</span></button>
+<button onclick="filterSounds('notification',this)">Notification <span style="opacity:0.5">12</span></button>
+<button onclick="filterSounds('system',this)">System <span style="opacity:0.5">14</span></button>
+<button onclick="filterSounds('form',this)">Form <span style="opacity:0.5">10</span></button>
+<button onclick="filterSounds('media',this)">Media <span style="opacity:0.5">10</span></button>
+<button onclick="filterSounds('gesture',this)">Gesture <span style="opacity:0.5">6</span></button>
+</div>
+<div class="sound-grid" id="soundGrid"></div>
+</section>
+
+<section id="patterns">
+<div class="section-label">01</div>
+<h2 class="section-title">Interaction patterns</h2>
+<p class="section-desc">One attribute per behavior. Call <code style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:14px">bind()</code> once and SonicFlow wires every element it finds.</p>
+<div class="patterns-grid">
+<div class="pattern-card" onclick="playPattern(this,'hover')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="num">01</div><h3>Hover</h3><p>Ticks as the pointer crosses. On touch, a tap does the same.</p><code>data-sf-hover="tick"</code>
+</div>
+<div class="pattern-card" onclick="playPattern(this,'toggle')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="num">02</div><h3>Toggle</h3><p>A click and a clack for anything that flips between two states.</p><code>data-sf-toggle</code>
+</div>
+<div class="pattern-card" onclick="playPattern(this,'press')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="num">03</div><h3>Press & Release</h3><p>Paired together, a click becomes a real two-part press.</p><code>data-sf-press data-sf-release</code>
+</div>
+<div class="pattern-card" onclick="playPattern(this,'success')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="num">04</div><h3>Success</h3><p>Uplifting confirmation for completed actions and saves.</p><code>data-sf-success</code>
+</div>
+<div class="pattern-card" onclick="playPattern(this,'error')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="num">05</div><h3>Error</h3><p>Gentle but clear alerts for validation and failures.</p><code>data-sf-error</code>
+</div>
+<div class="pattern-card" onclick="playPattern(this,'notification')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="num">06</div><h3>Notification</h3><p>Subtle pings for messages, alerts, and system events.</p><code>data-sf-notification</code>
+</div>
+</div>
+</section>
+
+<section id="why">
+<div class="section-label">02</div>
+<h2 class="section-title">Why SonicFlow</h2>
+<p class="section-desc">Small enough to forget, considered enough to notice. Every card here plays the cue that tells its own story. Press one.</p>
+<div class="why-grid">
+<div class="why-card" onclick="playWhy(this,'zero')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(34,197,94,0.1)">⚡</div><h4>Zero Bytes</h4><p>Nothing to download. Everything is synthesized in real-time using the Web Audio API.</p>
+</div>
+<div class="why-card" onclick="playWhy(this,'tiny')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(168,85,247,0.1)">📦</div><h4>Tiny Footprint</h4><p>Just 2.1kb gzipped. Smaller than a single image, yet packs 84 unique sounds.</p>
+</div>
+<div class="why-card" onclick="playWhy(this,'instant')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(59,130,246,0.1)">🎯</div><h4>Instant Response</h4><p>No network requests, no decoding delay. Sounds play in under 5 milliseconds.</p>
+</div>
+<div class="why-card" onclick="playWhy(this,'rich')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(245,158,11,0.1)">🎹</div><h4>Rich Synthesis</h4><p>Multi-oscillator voices with filters, envelopes, and spatial positioning built in.</p>
+</div>
+<div class="why-card" onclick="playWhy(this,'custom')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(236,72,153,0.1)">🎨</div><h4>Fully Customizable</h4><p>Adjust pitch, volume, and reverb globally or per-sound with a simple API.</p>
+</div>
+<div class="why-card" onclick="playWhy(this,'accessible')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(6,182,212,0.1)">♿</div><h4>Accessible</h4><p>Respects reduced-motion preferences. Sounds enhance, never replace, visual feedback.</p>
+</div>
+<div class="why-card" onclick="playWhy(this,'framework')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(99,102,241,0.1)">⚛️</div><h4>Framework Agnostic</h4><p>Works with React, Vue, Svelte, or vanilla HTML. One import, zero dependencies.</p>
+</div>
+<div class="why-card" onclick="playWhy(this,'forever')" onmouseenter="if(hoverEnabled)playHover()">
+<div class="icon" style="background:rgba(34,197,94,0.1)">∞</div><h4>Plays Forever</h4><p>No licensing headaches. Generate infinite variations from a single seed.</p>
+</div>
+</div>
+</section>
+
+<section id="start">
+<div class="section-label">03</div>
+<h2 class="section-title">Get started</h2>
+<p class="section-desc">Two lines from silent to alive.</p>
+<div style="margin-top:40px">
+<div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;font-weight:600">1. Install the package</div>
+<div class="install-row">
+<span class="cmd">$</span>
+<span class="pkg" id="installCmd">npm install sonicflow</span>
+<div class="install-toggle">
+<button class="active" onclick="setPkg(this,'npm')">npm</button>
+<button onclick="setPkg(this,'yarn')">yarn</button>
+<button onclick="setPkg(this,'pnpm')">pnpm</button>
+</div>
+</div>
+</div>
+<div style="margin-top:32px">
+<div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;font-weight:600">2. Mark up and bind</div>
+<div class="code-block">
+<div><span class="comment">&lt;!-- one attribute per behavior --&gt;</span></div>
+<div><span class="tag">&lt;button</span> <span class="attr">data-sf-press</span> <span class="attr">data-sf-release</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/button&gt;</span></div>
+<div><span class="tag">&lt;a</span> <span class="attr">data-sf-hover</span>=<span class="val">"tick"</span><span class="tag">&gt;</span>Docs<span class="tag">&lt;/a&gt;</span></div>
+<div><span class="tag">&lt;button</span> <span class="attr">data-sf-toggle</span><span class="tag">&gt;</span>Dark mode<span class="tag">&lt;/button&gt;</span></div>
+</div>
+<div class="code-block" style="margin-top:12px">
+<div><span class="kw">import</span> { bind, play, setVolume } <span class="kw">from</span> <span class="str">'sonicflow'</span>;</div>
+<div style="margin-top:4px"></div>
+<div><span class="fn">bind</span>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// wires every data-sf-* attribute</span></div>
+<div><span class="fn">setVolume</span>(<span class="val">0.7</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// global loudness, from 0 to 1</span></div>
+<div style="margin-top:4px"></div>
+<div><span class="fn">play</span>(<span class="str">"success"</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// inherits the global volume</span></div>
+<div><span class="fn">play</span>(<span class="str">"success"</span>, { <span class="attr">volume</span>: <span class="val">0.4</span> }); <span class="comment">// quieter for this play only</span></div>
+</div>
+</div>
+</section>
+
+<footer>
+<p>SonicFlow — Synthesized with love. No samples, no latency, no limits.</p>
+</footer>
+
+<script>
+// ==================== AUDIO ENGINE ====================
+let ctx, masterGain, analyser;
+let globalVol = 0.7;
+let hoverEnabled = true;
+
+function initAudio() {
+  if (ctx) return;
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = ctx.createGain();
+  masterGain.gain.value = globalVol;
+  analyser = ctx.createAnalyser();
+  analyser.fftSize = 256;
+  masterGain.connect(analyser);
+  analyser.connect(ctx.destination);
+}
+
+function now() { return ctx ? ctx.currentTime : 0; }
+
+function playTone(freq, type, peak, atk, dcy, sus, rel, dur) {
+  initAudio();
+  const t = now();
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(peak * globalVol, t + atk);
+  g.gain.linearRampToValueAtTime(peak * globalVol * sus, t + atk + dcy);
+  g.gain.linearRampToValueAtTime(0, t + atk + dcy + dur + rel);
+  o.connect(g);
+  g.connect(masterGain);
+  o.start(t);
+  o.stop(t + atk + dcy + dur + rel + 0.05);
+  return {o, g};
+}
+
+function playNoise(peak, dur, lpFreq) {
+  initAudio();
+  const len = ctx.sampleRate * dur;
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1);
+  const src = ctx.createBufferSource();
+  const g = ctx.createGain();
+  const flt = ctx.createBiquadFilter();
+  flt.type = 'lowpass';
+  flt.frequency.setValueAtTime(lpFreq, now());
+  g.gain.setValueAtTime(peak * globalVol, now());
+  g.gain.exponentialRampToValueAtTime(0.001, now() + dur);
+  src.buffer = buf;
+  src.connect(flt);
+  flt.connect(g);
+  g.connect(masterGain);
+  src.start(now());
+}
+
+function playBandNoise(peak, dur, freq, Q) {
+  initAudio();
+  const len = ctx.sampleRate * dur;
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1);
+  const src = ctx.createBufferSource();
+  const g = ctx.createGain();
+  const flt = ctx.createBiquadFilter();
+  flt.type = 'bandpass';
+  flt.frequency.setValueAtTime(freq, now());
+  flt.Q.value = Q || 5;
+  g.gain.setValueAtTime(peak * globalVol, now());
+  g.gain.exponentialRampToValueAtTime(0.001, now() + dur);
+  src.buffer = buf;
+  src.connect(flt);
+  flt.connect(g);
+  g.connect(masterGain);
+  src.start(now());
+}
+
+function playSweepNoise(peak, dur, startFreq, endFreq) {
+  initAudio();
+  const len = ctx.sampleRate * dur;
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1);
+  const src = ctx.createBufferSource();
+  const g = ctx.createGain();
+  const flt = ctx.createBiquadFilter();
+  flt.type = 'lowpass';
+  flt.frequency.setValueAtTime(startFreq, now());
+  flt.frequency.linearRampToValueAtTime(endFreq, now() + dur);
+  g.gain.setValueAtTime(0, now());
+  g.gain.linearRampToValueAtTime(peak * globalVol, now() + dur * 0.2);
+  g.gain.linearRampToValueAtTime(0, now() + dur);
+  src.buffer = buf;
+  src.connect(flt);
+  flt.connect(g);
+  g.connect(masterGain);
+  src.start(now());
+}
+
+// ==================== FEEDBACK (14) ====================
+function playSuccess() {
+  [523.25, 659.25, 783.99].forEach((fr, i) => {
+    setTimeout(() => playTone(fr, 'sine', 0.18, 0.008, 0.04, 0.3, 0.15, 0.08), i * 55);
+  });
+}
+function playSuccessSoft() {
+  [523.25, 659.25].forEach((fr, i) => {
+    setTimeout(() => playTone(fr, 'sine', 0.1, 0.015, 0.06, 0.4, 0.2, 0.12), i * 70);
+  });
+}
+function playSuccessBright() {
+  [880, 1108.73, 1318.51].forEach((fr, i) => {
+    setTimeout(() => playTone(fr, 'sine', 0.15, 0.005, 0.03, 0.2, 0.1, 0.06), i * 45);
+  });
+}
+function playError() {
+  initAudio();
+  const t = now();
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  const flt = ctx.createBiquadFilter();
+  o.type = 'sawtooth';
+  o.frequency.setValueAtTime(180, t);
+  o.frequency.linearRampToValueAtTime(126, t + 0.12);
+  flt.type = 'lowpass';
+  flt.frequency.setValueAtTime(800, t);
+  flt.frequency.linearRampToValueAtTime(200, t + 0.18);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.12 * globalVol, t + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+  o.connect(flt);
+  flt.connect(g);
+  g.connect(masterGain);
+  o.start(t);
+  o.stop(t + 0.25);
+}
+function playErrorSoft() {
+  playTone(200, 'sine', 0.08, 0.01, 0.04, 0.3, 0.15, 0.1);
+  setTimeout(() => playTone(180, 'sine', 0.06, 0.01, 0.04, 0.2, 0.15, 0.1), 120);
+}
+function playErrorShake() {
+  [200, 180, 160, 180].forEach((fr, i) => {
+    setTimeout(() => playTone(fr, 'sine', 0.06, 0.005, 0.02, 0.2, 0.05, 0.03), i * 40);
+  });
+}
+function playWarning() {
+  [0, 150].forEach((d, i) => {
+    setTimeout(() => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      const flt = ctx.createBiquadFilter();
+      o.type = 'square';
+      o.frequency.setValueAtTime(440, now());
+      flt.type = 'lowpass';
+      flt.frequency.setValueAtTime(2000, now());
+      g.gain.setValueAtTime(0, now());
+      g.gain.linearRampToValueAtTime(0.08 * globalVol, now() + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, now() + 0.15);
+      o.connect(flt);
+      flt.connect(g);
+      g.connect(masterGain);
+      o.start(now());
+      o.stop(now() + 0.2);
+    }, d);
+  });
+}
+function playConfirm() {
+  playTone(523, 'sine', 0.22, 0.008, 0.02, 0.3, 0.08, 0.04);
+  setTimeout(() => playTone(659, 'sine', 0.22, 0.008, 0.02, 0.3, 0.1, 0.06), 70);
+}
+function playDeny() {
+  playTone(300, 'sawtooth', 0.15, 0.01, 0.02, 0.2, 0.1, 0.05);
+  setTimeout(() => playTone(250, 'sawtooth', 0.12, 0.01, 0.02, 0.2, 0.1, 0.08), 100);
+}
+function playComplete() {
+  [392, 523.25, 659.25, 783.99, 1046.5].forEach((fr, i) => {
+    setTimeout(() => playTone(fr, 'sine', 0.12, 0.006, 0.03, 0.3, 0.15, 0.06), i * 45);
+  });
+}
+function playCancel() {
+  playTone(350, 'triangle', 0.1, 0.01, 0.03, 0.2, 0.12, 0.08);
+  setTimeout(() => playTone(280, 'triangle', 0.08, 0.01, 0.03, 0.15, 0.12, 0.1), 100);
+}
+function playUndo() {
+  playTone(600, 'sine', 0.1, 0.01, 0.02, 0.3, 0.1, 0.05);
+  setTimeout(() => playTone(500, 'sine', 0.08, 0.01, 0.02, 0.2, 0.1, 0.05), 80);
+  setTimeout(() => playTone(400, 'sine', 0.06, 0.01, 0.02, 0.15, 0.1, 0.05), 160);
+}
+
+// ==================== INTERACTION (18) ====================
+function playHover() {
+  initAudio();
+  const t = now();
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  const flt = ctx.createBiquadFilter();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(800, t);
+  o.frequency.exponentialRampToValueAtTime(1200, t + 0.02);
+  flt.type = 'highpass';
+  flt.frequency.setValueAtTime(600, t);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.12 * globalVol, t + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+  o.connect(flt);
+  flt.connect(g);
+  g.connect(masterGain);
+  o.start(t);
+  o.stop(t + 0.08);
+}
+function playHoverSoft() {
+  playTone(600, 'sine', 0.06, 0.008, 0.02, 0.2, 0.08, 0.03);
+}
+function playHoverSharp() {
+  playTone(1500, 'square', 0.04, 0.002, 0.01, 0.1, 0.03, 0.01);
+}
+function playClick() {
+  initAudio();
+  const t = now();
+  const len = ctx.sampleRate * 0.015;
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (len * 0.08));
+  const src = ctx.createBufferSource();
+  const g = ctx.createGain();
+  const flt = ctx.createBiquadFilter();
+  flt.type = 'bandpass';
+  flt.frequency.setValueAtTime(2500, t);
+  flt.Q.value = 2;
+  g.gain.setValueAtTime(0.35 * globalVol, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.015);
+  src.buffer = buf;
+  src.connect(flt);
+  flt.connect(g);
+  g.connect(masterGain);
+  src.start(t);
+}
+function playClickSoft() {
+  playTone(800, 'sine', 0.08, 0.003, 0.01, 0.1, 0.05, 0.02);
+}
+function playClickMechanical() {
+  playBandNoise(0.3, 0.02, 3000, 8);
+  setTimeout(() => playBandNoise(0.15, 0.015, 1500, 6), 10);
+}
+function playPop() {
+  playTone(400, 'sine', 0.3, 0.003, 0.01, 0.1, 0.05, 0.02);
+}
+function playPopSoft() {
+  playTone(350, 'sine', 0.15, 0.005, 0.015, 0.15, 0.08, 0.03);
+}
+function playToggleOn() {
+  playTone(600, 'sine', 0.2, 0.005, 0.02, 0.3, 0.1, 0.05);
+}
+function playToggleOff() {
+  playTone(450, 'sine', 0.15, 0.005, 0.02, 0.2, 0.08, 0.03);
+}
+function playPress() { playClick(); }
+function playRelease() { playPop(); }
+function playScroll() { playSweepNoise(0.15, 0.08, 4000, 800); }
+function playScrollUp() { playSweepNoise(0.12, 0.08, 800, 4000); }
+function playSwipe() { playSweepNoise(0.18, 0.1, 6000, 500); }
+function playSwipeBack() { playSweepNoise(0.15, 0.1, 500, 6000); }
+function playWhoosh() { playNoise(0.2, 0.12, 3000); }
+function playPluck() {
+  const notes = [220, 293.66, 329.63, 440];
+  const fr = notes[Math.floor(Math.random() * notes.length)];
+  initAudio();
+  const t = now();
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  const flt = ctx.createBiquadFilter();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(fr, t);
+  g.gain.setValueAtTime(0.22 * globalVol, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+  flt.type = 'lowpass';
+  flt.frequency.setValueAtTime(3000, t);
+  flt.frequency.exponentialRampToValueAtTime(500, t + 0.25);
+  o.connect(flt);
+  flt.connect(g);
+  g.connect(masterGain);
+  o.start(t);
+  o.stop(t + 0.3);
+}
+
+// ==================== NOTIFICATION (12) ====================
+function playNotification() {
+  initAudio();
+  const t = now();
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(587.33, t);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.18 * globalVol, t + 0.015);
+  g.gain.setValueAtTime(0.18 * globalVol, t + 0.12);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+  o.connect(g);
+  g.connect(masterGain);
+  o.start(t);
+  o.stop(t + 0.4);
+}
+function playNotificationSoft() {
+  playTone(523, 'sine', 0.1, 0.01, 0.03, 0.4, 0.2, 0.1);
+}
+function playBell() {
+  const t = now();
+  [1, 2.7, 5.4, 8.1].forEach((h, i) => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(880 * h, t);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime([0.4, 0.2, 0.1, 0.05][i] * globalVol, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 1.2 + i * 0.25);
+    o.connect(g);
+    g.connect(masterGain);
+    o.start(t);
+    o.stop(t + 2.5);
+  });
+}
+function playChime() { playBell(); }
+function playPing() {
+  playTone(1760, 'sine', 0.5, 0.003, 0.015, 0.1, 0.08, 0.02);
+}
+function playPingSoft() {
+  playTone(1200, 'sine', 0.2, 0.005, 0.02, 0.2, 0.15, 0.05);
+}
+function playMessage() {
+  playTone(587, 'sine', 0.15, 0.008, 0.02, 0.3, 0.15, 0.06);
+  setTimeout(() => playTone(784, 'sine', 0.12, 0.008, 0.02, 0.2, 0.15, 0.06), 80);
+}
+function playMention() {
+  playTone(880, 'sine', 0.12, 0.005, 0.015, 0.2, 0.1, 0.04);
+  setTimeout(() => playTone(1108, 'sine', 0.1, 0.005, 0.015, 0.15, 0.1, 0.04), 60);
+  setTimeout(() => playTone(1320, 'sine', 0.08, 0.005, 0.015, 0.1, 0.1, 0.04), 120);
+}
+function playAlert() { playWarning(); }
+function playCall() {
+  [0, 400, 800].forEach(d => setTimeout(() => playTone(800, 'sine', 0.25, 0.01, 0.04, 0.3, 0.1, 0.1), d));
+}
+function playHangup() {
+  playTone(400, 'sine', 0.15, 0.01, 0.04, 0.3, 0.2, 0.1);
+}
+function playReminder() {
+  playTone(523, 'sine', 0.1, 0.01, 0.03, 0.4, 0.2, 0.15);
+}
+
+// ==================== SYSTEM (14) ====================
+function playUnlock() {
+  [392, 523.25, 659.25, 783.99].forEach((fr, i) => {
+    setTimeout(() => playTone(fr, 'sine', 0.12, 0.008, 0.015, 0.3, 0.15, 0.04), i * 35);
+  });
+}
+function playLock() {
+  playTone(783.99, 'sine', 0.1, 0.008, 0.015, 0.2, 0.15, 0.04);
+  setTimeout(() => playTone(659.25, 'sine', 0.08, 0.008, 0.015, 0.15, 0.15, 0.04), 50);
+  setTimeout(() => playTone(523.25, 'sine', 0.06, 0.008, 0.015, 0.1, 0.15, 0.04), 100);
+}
+function playOpen() {
+  playTone(400, 'sine', 0.35, 0.01, 0.02, 0.5, 0.1, 0.05);
+}
+function playClose() {
+  playTone(500, 'sine', 0.25, 0.01, 0.02, 0.3, 0.08, 0.03);
+}
+function playSave() {
+  playTone(440, 'sine', 0.25, 0.005, 0.02, 0.3, 0.1, 0.02);
+  setTimeout(() => playTone(554, 'sine', 0.25, 0.005, 0.02, 0.3, 0.1, 0.02), 60);
+  setTimeout(() => playTone(659, 'sine', 0.25, 0.01, 0.02, 0.3, 0.1, 0.05), 120);
+}
+function playDelete() {
+  playTone(200, 'sawtooth', 0.2, 0.005, 0.02, 0.2, 0.1, 0.02);
+  setTimeout(() => playTone(150, 'sawtooth', 0.15, 0.01, 0.02, 0.15, 0.1, 0.05), 60);
+}
+function playTrash() {
+  playNoise(0.15, 0.15, 600);
+  setTimeout(() => playNoise(0.1, 0.1, 300), 80);
+}
+function playRefresh() {
+  playSweepNoise(0.2, 0.1, 5000, 800);
+}
+function playLoad() {
+  playNoise(0.15, 0.1, 2500);
+}
+function playLoading() {
+  [0, 100, 200].forEach((d, i) => {
+    setTimeout(() => playTone(600 + i * 100, 'sine', 0.06, 0.005, 0.01, 0.1, 0.05, 0.02), d);
+  });
+}
+function playSearch() {
+  playTyping();
+}
+function playSend() {
+  playTone(600, 'sine', 0.15, 0.01, 0.02, 0.3, 0.1, 0.05);
+  setTimeout(() => playTone(900, 'sine', 0.1, 0.005, 0.02, 0.2, 0.1, 0.03), 60);
+}
+function playReceive() {
+  playTone(900, 'sine', 0.1, 0.005, 0.02, 0.2, 0.1, 0.03);
+  setTimeout(() => playTone(600, 'sine', 0.15, 0.01, 0.02, 0.3, 0.1, 0.05), 60);
+}
+function playDownload() {
+  playTone(400, 'sine', 0.1, 0.01, 0.02, 0.3, 0.1, 0.05);
+  setTimeout(() => playTone(500, 'sine', 0.1, 0.01, 0.02, 0.3, 0.1, 0.05), 80);
+  setTimeout(() => playTone(600, 'sine', 0.12, 0.01, 0.02, 0.3, 0.1, 0.08), 160);
+}
+
+// ==================== FORM (10) ====================
+function playTyping() {
+  const fr = [800, 1000, 1200, 900, 1100][Math.floor(Math.random() * 5)];
+  playTone(fr, 'sine', 0.08, 0.002, 0.008, 0.1, 0.02, 0.01);
+}
+function playBackspace() {
+  playTone(300, 'sawtooth', 0.06, 0.003, 0.01, 0.1, 0.03, 0.02);
+}
+function playEnter() {
+  playTone(500, 'sine', 0.15, 0.005, 0.015, 0.3, 0.08, 0.03);
+}
+function playTab() {
+  playTone(700, 'sine', 0.08, 0.003, 0.01, 0.2, 0.05, 0.02);
+}
+function playSelectAll() {
+  playTone(600, 'sine', 0.1, 0.005, 0.01, 0.15, 0.05, 0.02);
+  setTimeout(() => playTone(800, 'sine', 0.08, 0.005, 0.01, 0.1, 0.05, 0.02), 40);
+}
+function playCopy() {
+  playTone(880, 'sine', 0.1, 0.003, 0.01, 0.2, 0.05, 0.02);
+}
+function playPaste() {
+  playTone(660, 'sine', 0.1, 0.003, 0.01, 0.2, 0.05, 0.02);
+  setTimeout(() => playTone(880, 'sine', 0.08, 0.003, 0.01, 0.15, 0.05, 0.02), 50);
+}
+function playFocus() {
+  playTone(1000, 'sine', 0.06, 0.005, 0.01, 0.15, 0.05, 0.02);
+}
+function playBlur() {
+  playTone(800, 'sine', 0.04, 0.005, 0.01, 0.1, 0.05, 0.02);
+}
+function playValidate() {
+  playTone(440, 'sine', 0.08, 0.003, 0.01, 0.2, 0.05, 0.02);
+  setTimeout(() => playTone(554, 'sine', 0.06, 0.003, 0.01, 0.15, 0.05, 0.02), 40);
+}
+
+// ==================== MEDIA (10) ====================
+function playPlay() {
+  playTone(600, 'sine', 0.3, 0.005, 0.02, 0.3, 0.08, 0.02);
+}
+function playPause() {
+  playTone(500, 'sine', 0.25, 0.005, 0.02, 0.2, 0.05, 0.02);
+}
+function playStop() {
+  playTone(400, 'square', 0.2, 0.005, 0.02, 0.2, 0.05, 0.02);
+}
+function playSkip() {
+  playSweepNoise(0.25, 0.08, 6000, 1000);
+}
+function playSkipBack() {
+  playSweepNoise(0.2, 0.08, 1000, 6000);
+}
+function playVolumeUp() {
+  playTone(800, 'sine', 0.12, 0.005, 0.01, 0.2, 0.05, 0.02);
+  setTimeout(() => playTone(1000, 'sine', 0.1, 0.005, 0.01, 0.15, 0.05, 0.02), 50);
+}
+function playVolumeDown() {
+  playTone(1000, 'sine', 0.1, 0.005, 0.01, 0.15, 0.05, 0.02);
+  setTimeout(() => playTone(800, 'sine', 0.08, 0.005, 0.01, 0.1, 0.05, 0.02), 50);
+}
+function playMute() {
+  playTone(600, 'sine', 0.1, 0.005, 0.01, 0.1, 0.05, 0.02);
+}
+function playUnmute() {
+  playTone(600, 'sine', 0.15, 0.005, 0.02, 0.3, 0.08, 0.03);
+}
+function playRecord() {
+  playTone(1000, 'sine', 0.3, 0.005, 0.02, 0.2, 0.1, 0.05);
+}
+
+// ==================== GESTURE (6) ====================
+function playPinch() {
+  playTone(400, 'sine', 0.08, 0.005, 0.01, 0.1, 0.03, 0.02);
+  setTimeout(() => playTone(300, 'sine', 0.06, 0.005, 0.01, 0.08, 0.03, 0.02), 60);
+}
+function playZoom() {
+  playTone(300, 'sine', 0.06, 0.005, 0.01, 0.08, 0.03, 0.02);
+  setTimeout(() => playTone(400, 'sine', 0.08, 0.005, 0.01, 0.1, 0.03, 0.02), 60);
+}
+function playPull() {
+  playSweepNoise(0.15, 0.12, 2000, 4000);
+}
+function playDrop() {
+  playTone(200, 'sine', 0.2, 0.01, 0.02, 0.3, 0.1, 0.05);
+}
+function playDrag() {
+  playNoise(0.08, 0.15, 1500);
+}
+function playDropZone() {
+  playTone(350, 'sine', 0.15, 0.01, 0.02, 0.3, 0.1, 0.05);
+  setTimeout(() => playTone(500, 'sine', 0.12, 0.01, 0.02, 0.2, 0.1, 0.05), 80);
+}
+
+// ==================== NAV CLICK ====================
+function playNavClick() { playClick(); }
+
+// ==================== SOUND DATA ====================
+const soundData = [
+  // Feedback (14)
+  {id:'success',name:'Success',cat:'feedback',fn:playSuccess},
+  {id:'success-soft',name:'Success Soft',cat:'feedback',fn:playSuccessSoft},
+  {id:'success-bright',name:'Success Bright',cat:'feedback',fn:playSuccessBright},
+  {id:'error',name:'Error',cat:'feedback',fn:playError},
+  {id:'error-soft',name:'Error Soft',cat:'feedback',fn:playErrorSoft},
+  {id:'error-shake',name:'Error Shake',cat:'feedback',fn:playErrorShake},
+  {id:'warning',name:'Warning',cat:'feedback',fn:playWarning},
+  {id:'confirm',name:'Confirm',cat:'feedback',fn:playConfirm},
+  {id:'deny',name:'Deny',cat:'feedback',fn:playDeny},
+  {id:'complete',name:'Complete',cat:'feedback',fn:playComplete},
+  {id:'cancel',name:'Cancel',cat:'feedback',fn:playCancel},
+  {id:'undo',name:'Undo',cat:'feedback',fn:playUndo},
+  // Interaction (18)
+  {id:'hover',name:'Hover',cat:'interaction',fn:playHover},
+  {id:'hover-soft',name:'Hover Soft',cat:'interaction',fn:playHoverSoft},
+  {id:'hover-sharp',name:'Hover Sharp',cat:'interaction',fn:playHoverSharp},
+  {id:'click',name:'Click',cat:'interaction',fn:playClick},
+  {id:'click-soft',name:'Click Soft',cat:'interaction',fn:playClickSoft},
+  {id:'click-mech',name:'Click Mech',cat:'interaction',fn:playClickMechanical},
+  {id:'pop',name:'Pop',cat:'interaction',fn:playPop},
+  {id:'pop-soft',name:'Pop Soft',cat:'interaction',fn:playPopSoft},
+  {id:'toggle-on',name:'Toggle On',cat:'interaction',fn:playToggleOn},
+  {id:'toggle-off',name:'Toggle Off',cat:'interaction',fn:playToggleOff},
+  {id:'press',name:'Press',cat:'interaction',fn:playPress},
+  {id:'release',name:'Release',cat:'interaction',fn:playRelease},
+  {id:'scroll',name:'Scroll',cat:'interaction',fn:playScroll},
+  {id:'scroll-up',name:'Scroll Up',cat:'interaction',fn:playScrollUp},
+  {id:'swipe',name:'Swipe',cat:'interaction',fn:playSwipe},
+  {id:'swipe-back',name:'Swipe Back',cat:'interaction',fn:playSwipeBack},
+  {id:'whoosh',name:'Whoosh',cat:'interaction',fn:playWhoosh},
+  {id:'pluck',name:'Pluck',cat:'interaction',fn:playPluck},
+  // Notification (12)
+  {id:'notification',name:'Notification',cat:'notification',fn:playNotification},
+  {id:'notification-soft',name:'Notify Soft',cat:'notification',fn:playNotificationSoft},
+  {id:'bell',name:'Bell',cat:'notification',fn:playBell},
+  {id:'chime',name:'Chime',cat:'notification',fn:playChime},
+  {id:'ping',name:'Ping',cat:'notification',fn:playPing},
+  {id:'ping-soft',name:'Ping Soft',cat:'notification',fn:playPingSoft},
+  {id:'message',name:'Message',cat:'notification',fn:playMessage},
+  {id:'mention',name:'Mention',cat:'notification',fn:playMention},
+  {id:'alert',name:'Alert',cat:'notification',fn:playAlert},
+  {id:'call',name:'Call',cat:'notification',fn:playCall},
+  {id:'hangup',name:'Hangup',cat:'notification',fn:playHangup},
+  {id:'reminder',name:'Reminder',cat:'notification',fn:playReminder},
+  // System (14)
+  {id:'unlock',name:'Unlock',cat:'system',fn:playUnlock},
+  {id:'lock',name:'Lock',cat:'system',fn:playLock},
+  {id:'open',name:'Open',cat:'system',fn:playOpen},
+  {id:'close',name:'Close',cat:'system',fn:playClose},
+  {id:'save',name:'Save',cat:'system',fn:playSave},
+  {id:'delete',name:'Delete',cat:'system',fn:playDelete},
+  {id:'trash',name:'Trash',cat:'system',fn:playTrash},
+  {id:'refresh',name:'Refresh',cat:'system',fn:playRefresh},
+  {id:'load',name:'Load',cat:'system',fn:playLoad},
+  {id:'loading',name:'Loading',cat:'system',fn:playLoading},
+  {id:'search',name:'Search',cat:'system',fn:playSearch},
+  {id:'send',name:'Send',cat:'system',fn:playSend},
+  {id:'receive',name:'Receive',cat:'system',fn:playReceive},
+  {id:'download',name:'Download',cat:'system',fn:playDownload},
+  // Form (10)
+  {id:'typing',name:'Typing',cat:'form',fn:playTyping},
+  {id:'backspace',name:'Backspace',cat:'form',fn:playBackspace},
+  {id:'enter',name:'Enter',cat:'form',fn:playEnter},
+  {id:'tab',name:'Tab',cat:'form',fn:playTab},
+  {id:'select-all',name:'Select All',cat:'form',fn:playSelectAll},
+  {id:'copy',name:'Copy',cat:'form',fn:playCopy},
+  {id:'paste',name:'Paste',cat:'form',fn:playPaste},
+  {id:'focus',name:'Focus',cat:'form',fn:playFocus},
+  {id:'blur',name:'Blur',cat:'form',fn:playBlur},
+  {id:'validate',name:'Validate',cat:'form',fn:playValidate},
+  // Media (10)
+  {id:'play',name:'Play',cat:'media',fn:playPlay},
+  {id:'pause',name:'Pause',cat:'media',fn:playPause},
+  {id:'stop',name:'Stop',cat:'media',fn:playStop},
+  {id:'skip',name:'Skip',cat:'media',fn:playSkip},
+  {id:'skip-back',name:'Skip Back',cat:'media',fn:playSkipBack},
+  {id:'volume-up',name:'Vol Up',cat:'media',fn:playVolumeUp},
+  {id:'volume-down',name:'Vol Down',cat:'media',fn:playVolumeDown},
+  {id:'mute',name:'Mute',cat:'media',fn:playMute},
+  {id:'unmute',name:'Unmute',cat:'media',fn:playUnmute},
+  {id:'record',name:'Record',cat:'media',fn:playRecord},
+  // Gesture (6)
+  {id:'pinch',name:'Pinch',cat:'gesture',fn:playPinch},
+  {id:'zoom',name:'Zoom',cat:'gesture',fn:playZoom},
+  {id:'pull',name:'Pull',cat:'gesture',fn:playPull},
+  {id:'drop',name:'Drop',cat:'gesture',fn:playDrop},
+  {id:'drag',name:'Drag',cat:'gesture',fn:playDrag},
+  {id:'drop-zone',name:'Drop Zone',cat:'gesture',fn:playDropZone}
+];
+
+// ==================== UI LOGIC ====================
+function renderSounds(filterCat) {
+  const grid = document.getElementById('soundGrid');
+  const filtered = filterCat === 'all' ? soundData : soundData.filter(s => s.cat === filterCat);
+  grid.innerHTML = filtered.map(s => `
+    <div class="sound-chip" onclick="playSoundChip(this,'${s.id}')" onmouseenter="if(hoverEnabled)playHover()">
+      <div>
+        <div class="name">${s.name}</div>
+        <div class="cat">${s.cat}</div>
+      </div>
+      <div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+  `).join('');
+}
+
+function playSoundChip(el, id) {
+  const s = soundData.find(x => x.id === id);
+  if (s) {
+    s.fn();
+    document.getElementById('activeSound').textContent = s.name;
+    document.querySelectorAll('.sound-chip').forEach(c => c.classList.remove('playing'));
+    el.classList.add('playing');
+    setTimeout(() => el.classList.remove('playing'), 400);
+  }
+}
+
+function filterSounds(cat, btn) {
+  document.querySelectorAll('.cat-filter button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSounds(cat);
+  playClick();
+}
+
+function setInspectorTab(btn, tab) {
+  document.querySelectorAll('.inspector-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  playClick();
+}
+
+function toggleHover() {
+  hoverEnabled = !hoverEnabled;
+  document.getElementById('hoverToggle').classList.toggle('on');
+  playClick();
+}
+
+function setPkg(btn, pkg) {
+  document.querySelectorAll('.install-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cmds = {npm:'npm install sonicflow',yarn:'yarn add sonicflow',pnpm:'pnpm add sonicflow'};
+  document.getElementById('installCmd').textContent = cmds[pkg];
+  playClick();
+}
+
+function playPattern(card, type) {
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  const rect = card.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = '50%';
+  ripple.style.top = '50%';
+  ripple.style.marginLeft = -size/2 + 'px';
+  ripple.style.marginTop = -size/2 + 'px';
+  card.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+
+  const sounds = {
+    hover: playHover,
+    toggle: () => { playToggleOn(); setTimeout(playToggleOff, 180); },
+    press: () => { playPress(); setTimeout(playRelease, 150); },
+    success: playSuccess,
+    error: playError,
+    notification: playNotification
+  };
+  sounds[type]();
+
+  const names = {hover:'Hover Tick',toggle:'Toggle Clack',press:'Press & Release',success:'Success',error:'Error',notification:'Notification'};
+  document.getElementById('activeSound').textContent = names[type];
+}
+
+function playWhy(card, type) {
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  const rect = card.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = '50%';
+  ripple.style.top = '50%';
+  ripple.style.marginLeft = -size/2 + 'px';
+  ripple.style.marginTop = -size/2 + 'px';
+  card.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+
+  const sounds = {
+    zero: () => { [1000,1400,1800,2200].forEach((fr,i) => setTimeout(() => playTone(fr,'sine',0.25,0.003,0.015,0.1,0.08,0.015),i*45)); },
+    tiny: playPop,
+    instant: playClick,
+    rich: playBell,
+    custom: playPluck,
+    accessible: playTyping,
+    framework: playConfirm,
+    forever: playUnlock
+  };
+  sounds[type]();
+
+  const names = {zero:'Sparkle',tiny:'Pop',instant:'Click',rich:'Chime',custom:'Pluck',accessible:'Typing',framework:'Confirm',forever:'Unlock'};
+  document.getElementById('activeSound').textContent = names[type];
+}
+
+// Volume slider
+document.getElementById('masterVol').addEventListener('input', function(e) {
+  globalVol = e.target.value / 100;
+  document.getElementById('volDisplay').textContent = e.target.value;
+  if (masterGain) masterGain.gain.setTargetAtTime(globalVol, ctx.currentTime, 0.05);
+});
+
+// Waveform visualizer
+function drawWaveform() {
+  const canvas = document.getElementById('waveCanvas');
+  if (!canvas || !analyser) return requestAnimationFrame(drawWaveform);
+  const ctx2d = canvas.getContext('2d');
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+
+  function draw() {
+    requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(dataArray);
+    ctx2d.fillStyle = '#0a0a0a';
+    ctx2d.fillRect(0, 0, canvas.width, canvas.height);
+    const barWidth = canvas.width / bufferLength;
+    for (let i = 0; i < bufferLength; i++) {
+      const barHeight = (dataArray[i] / 255) * canvas.height * 0.85;
+      const hue = 140 + (i / bufferLength) * 40;
+      ctx2d.fillStyle = `hsla(${hue}, 80%, 55%, ${0.3 + (dataArray[i] / 255) * 0.7})`;
+      ctx2d.fillRect(i * barWidth, canvas.height - barHeight, barWidth - 0.5, barHeight);
+    }
+  }
+  draw();
+}
+
+// Init
+renderSounds('all');
+setTimeout(drawWaveform, 300);
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>
