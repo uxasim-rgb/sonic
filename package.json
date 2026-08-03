@@ -1,0 +1,49 @@
+{
+  "name": "sonic-flow",
+  "version": "1.0.0",
+  "description": "84 interaction sounds synthesized live with Web Audio. No files, no dependencies, under 3 kB.",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src/index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "sound",
+    "audio",
+    "web-audio",
+    "interaction",
+    "ui-sounds",
+    "sound-effects",
+    "synthesizer",
+    "click",
+    "hover",
+    "notification",
+    "haptic",
+    "feedback",
+    "sonicflow"
+  ],
+  "author": "Asim <https://uxasim.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uxasim-rgb/sonic-flow.git"
+  },
+  "homepage": "https://sonic-flow-eta.vercel.app",
+  "bugs": {
+    "url": "https://github.com/uxasim-rgb/sonic-flow/issues"
+  },
+  "sideEffects": false
+}
