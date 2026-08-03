@@ -1,184 +1,149 @@
 # SonicFlow
 
-> **Interaction sounds for the web. Synthesized live. Zero bytes shipped.**
+> **Sound design, shipped as code.**
 
-[![Live Demo](https://img.shields.io/badge/demo-cues.uxasim.com-22c55e?style=flat-square&logo=vercel)](https://cues.uxasim.com/)
-[![GitHub stars](https://img.shields.io/github/stars/uxasim-rgb/sonicflow?style=flat-square&color=22c55e)](https://github.com/uxasim-rgb/sonicflow)
-[![GitHub forks](https://img.shields.io/github/forks/uxasim-rgb/sonicflow?style=flat-square&color=22c55e)](https://github.com/uxasim-rgb/sonicflow)
-[![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-sonic--flow--eta.vercel.app-22c55e?style=flat-square&logo=vercel)](https://sonic-flow-eta.vercel.app/)
+[![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](./LICENSE)
 
-🔗 **Live Demo:** [cues.uxasim.com](https://cues.uxasim.com/)
+84 interaction sounds — clicks, chimes, sweeps, blooms — synthesized live with the Web Audio API. No audio files, no network requests, no loading states. Under 3 kB gzipped.
 
-SonicFlow is a premium library of **84 UI interaction sounds** for the modern web. Every cue is synthesized in real-time using the Web Audio API — no samples, no network requests, no loading states. Just import, bind, and listen.
+**[Browse all 84 sounds →](https://sonic-flow-eta.vercel.app/#catalog)**
 
 ---
 
-## ✨ Why SonicFlow?
-
-| | |
-|:---|:---|
-| **⚡ Zero Bytes** | Nothing to download. Everything is synthesized live in the browser. |
-| **📦 2.1kb Gzipped** | Smaller than a single image. Eighty-four unique sounds in one tiny package. |
-| **🎯 Instant Response** | Sub-5ms latency. No decoding, no buffering, no waiting. |
-| **🎹 Rich Synthesis** | Multi-oscillator voices with filters, ADSR envelopes, and spatial audio. |
-| **🎨 Fully Customizable** | Global and per-sound volume, pitch shift, and reverb control. |
-| **♿ Accessible** | Respects `prefers-reduced-motion`. Enhances, never replaces, visual feedback. |
-| **⚛️ Framework Agnostic** | React, Vue, Svelte, Solid, or vanilla HTML. One import, zero dependencies. |
-
----
-
-## 🚀 Quick Start
-
-### Install
+## Install
 
 ```bash
-npm install sonicflow
-# or
-yarn add sonicflow
-# or
-pnpm add sonicflow
+npm install sonic-flow
 ```
 
-### Use
+```bash
+yarn add sonic-flow
+```
+
+```bash
+pnpm add sonic-flow
+```
+
+**No bundler?** Drop in a script tag:
 
 ```html
-<!-- One attribute per behavior -->
+<script src="https://unpkg.com/sonic-flow@latest"></script>
+<script>SonicFlow.bind();</script>
+```
+
+---
+
+## Usage
+
+Tag any element with a `data-sf-*` attribute and call `bind()` once:
+
+```html
 <button data-sf-press data-sf-release>Save</button>
 <a data-sf-hover="tick">Docs</a>
-<button data-sf-toggle>Dark mode</button>
-<input data-sf-focus data-sf-blur />
+<input data-sf-toggle type="checkbox" />
 ```
 
-```js
-import { bind, play, setVolume } from 'sonicflow';
+```ts
+import { bind, play, setVolume } from "sonic-flow";
 
-bind();                          // Auto-wires every data-sf-* attribute
-setVolume(0.7);                  // Global loudness, 0 to 1
+bind();           // wires every data-sf-* element
+setVolume(0.7);   // master volume, 0 to 1
 
-play('success');                 // Play any sound programmatically
-play('error', { volume: 0.4 });  // Quieter for this play only
+play("success");                  // uses master volume
+play("success", { volume: 0.4 }); // override per call
 ```
 
 ---
 
-## 🎵 The Collection
+## The collection
 
-### 84 Sounds Across 8 Categories
+84 sounds across 8 categories. Every cue has its own character — none are pitch-shifted clones.
 
-| Category | Count | Description |
-|----------|-------|-------------|
-| **Feedback** | 12 | Success, error, warning, confirm, deny, complete, cancel, undo |
-| **Interaction** | 18 | Hover, click, pop, toggle, press, release, scroll, swipe, whoosh, pluck |
-| **Notification** | 12 | Bell, chime, ping, message, mention, alert, call, hangup, reminder |
-| **System** | 14 | Unlock, lock, open, close, save, delete, refresh, load, send, receive |
-| **Form** | 10 | Typing, backspace, enter, tab, copy, paste, focus, blur, validate |
-| **Media** | 10 | Play, pause, stop, skip, volume up/down, mute, unmute, record |
-| **Gesture** | 6 | Pinch, zoom, pull, drop, drag, drop-zone |
+| Category | Sounds | Examples |
+|---|---|---|
+| **Feedback** | 14 | success, error, warning, confirm, deny, complete, bloom, sparkle |
+| **Interaction** | 18 | hover, click, pop, toggle, press, release, scroll, swipe, pluck |
+| **Notification** | 12 | bell, chime, ping, message, mention, alert, call, reminder |
+| **System** | 14 | unlock, lock, open, close, save, delete, refresh, send, download |
+| **Form** | 10 | typing, backspace, enter, tab, copy, paste, focus, blur, validate |
+| **Media** | 10 | play, pause, stop, skip, vol-up, vol-down, mute, unmute, record |
+| **Gesture** | 6 | pinch, zoom, pull, drop, drag, drop-zone |
 
 ---
 
-## 🎛️ API Reference
+## Data attributes
+
+| Attribute | Trigger | Default sound |
+|---|---|---|
+| `data-sf-hover` | Pointer enter / touch | hover |
+| `data-sf-press` | Mouse down / touch start | click |
+| `data-sf-release` | Mouse up / touch end | pop |
+| `data-sf-toggle` | Click | toggle-on / toggle-off |
+| `data-sf-focus` | Focus in | focus |
+| `data-sf-blur` | Focus out | blur |
+
+Pass a sound name as the value to override: `data-sf-hover="hover-soft"`.
+
+---
+
+## API
 
 ### `bind(options?)`
 
-Automatically wires all elements with `data-sf-*` attributes.
+Wires all `data-sf-*` elements. Call once at startup.
 
-```js
-import { bind } from 'sonicflow';
-
-bind({
-  volume: 0.7,        // Default global volume
-  hover: true,        // Enable hover sounds
-  reducedMotion: true // Respect prefers-reduced-motion
-});
+```ts
+bind({ volume: 0.7, hover: true });
 ```
 
 ### `play(name, options?)`
 
-Play any sound programmatically.
+Play any sound by name.
 
-```js
-import { play } from 'sonicflow';
-
-play('success');
-play('error', { volume: 0.3, pitch: -2 });
+```ts
+play("success");
+play("error", { volume: 0.3 });
 ```
 
 ### `setVolume(value)`
 
-Set the global master volume (0 to 1).
-
-```js
-import { setVolume } from 'sonicflow';
-
-setVolume(0.5);
-```
+Set master volume (0–1).
 
 ### `setPitch(semitones)`
 
-Shift all sounds up or down in pitch.
-
-```js
-import { setPitch } from 'sonicflow';
-
-setPitch(2);   // Shift up 2 semitones
-setPitch(-5);  // Shift down 5 semitones
-```
+Shift all sounds up or down.
 
 ### `setReverb(amount)`
 
-Set global reverb wet/dry mix (0 to 1).
-
-```js
-import { setReverb } from 'sonicflow';
-
-setReverb(0.3);  // 30% reverb
-```
+Set reverb wet/dry mix (0–1).
 
 ---
 
-## 🏷️ Data Attributes
+## Framework examples
 
-| Attribute | Trigger | Sound |
-|-----------|---------|-------|
-| `data-sf-hover` | Mouse enter / touch | Hover tick |
-| `data-sf-press` | Mouse down / touch start | Click |
-| `data-sf-release` | Mouse up / touch end | Pop |
-| `data-sf-toggle` | Click | Toggle on/off |
-| `data-sf-success` | Programmatic or bound event | Success chime |
-| `data-sf-error` | Programmatic or bound event | Error buzz |
-| `data-sf-notification` | Programmatic or bound event | Notification ping |
-| `data-sf-focus` | Focus in | Focus tone |
-| `data-sf-blur` | Focus out | Blur tone |
+**React**
 
----
-
-## 🧪 Framework Examples
-
-### React
-
-```jsx
-import { useEffect } from 'react';
-import { bind, play } from 'sonicflow';
+```tsx
+import { useEffect } from "react";
+import { bind, play } from "sonic-flow";
 
 function App() {
   useEffect(() => { bind(); }, []);
-
   return (
-    <button data-sf-press data-sf-release onClick={() => play('success')}>
+    <button data-sf-press onClick={() => play("success")}>
       Save
     </button>
   );
 }
 ```
 
-### Vue
+**Vue**
 
 ```vue
 <script setup>
-import { onMounted } from 'vue';
-import { bind } from 'sonicflow';
-
+import { onMounted } from "vue";
+import { bind } from "sonic-flow";
 onMounted(() => bind());
 </script>
 
@@ -187,13 +152,12 @@ onMounted(() => bind());
 </template>
 ```
 
-### Svelte
+**Svelte**
 
 ```svelte
 <script>
-  import { onMount } from 'svelte';
-  import { bind } from 'sonicflow';
-
+  import { onMount } from "svelte";
+  import { bind } from "sonic-flow";
   onMount(() => bind());
 </script>
 
@@ -202,70 +166,39 @@ onMounted(() => bind());
 
 ---
 
-## 🌐 Browser Support
-
-SonicFlow uses the Web Audio API and works in all modern browsers:
+## Browser support
 
 | Chrome | Firefox | Safari | Edge |
-|--------|---------|--------|------|
-| ✅ 66+ | ✅ 60+ | ✅ 14.1+ | ✅ 79+ |
+|---|---|---|---|
+| 66+ | 60+ | 14.1+ | 79+ |
+
+Respects `prefers-reduced-motion` — sounds are suppressed when the user has asked for reduced motion.
 
 ---
 
-## 📦 Bundle Size
+## Bundle size
 
 ```
-sonicflow.js ........... 4.8kb
-sonicflow.js.gz ........ 2.1kb  ⭐
-sonicflow.js.br ........ 1.8kb
+sonic-flow.js ........... 4.8 kB
+sonic-flow.js.gz ........ 2.1 kB
+sonic-flow.js.br ........ 1.8 kB
 ```
+
+All 84 sounds, zero audio files. Smaller than a single favicon.
 
 ---
 
-## 🎨 Custom Sounds
-
-Want to create your own? SonicFlow exposes the synthesis engine:
-
-```js
-import { synthesize } from 'sonicflow';
-
-synthesize({
-  type: 'sine',
-  frequency: 440,
-  envelope: { attack: 0.01, decay: 0.1, sustain: 0.3, release: 0.2 },
-  filter: { type: 'lowpass', frequency: 2000 }
-});
-```
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
+## Contributing
 
 ```bash
-git clone https://github.com/uxasim-rgb/sonicflow.git
-cd sonicflow
+git clone https://github.com/uxasim-rgb/sonic-flow.git
+cd sonic-flow
 npm install
 npm run dev
 ```
 
 ---
 
-## 🙏 Credits
+## License
 
-Created by [Asim](http://uxasim.com/) — Designer & Developer crafting interfaces that sound as good as they feel.
-
-🔗 **Live Demo:** [cues.uxasim.com](https://cues.uxasim.com/)
-
----
-
-## 📄 License
-
-MIT © [Asim](http://uxasim.com/)
-
----
-
-<p align="center">
-  <sub>Synthesized with love. No samples, no latency, no limits.</sub>
-</p>
+MIT — [Asim](https://uxasim.com/)
