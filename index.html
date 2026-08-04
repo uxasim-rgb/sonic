@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SonicFlow — Sound design, shipped as code</title>
-<meta name="description" content="84 interaction sounds synthesized live with Web Audio. No files, no dependencies, under 3 kB. Drop it in and every element can speak.">
+<meta name="description" content="206 interaction sounds synthesized live with Web Audio. No files, no dependencies, under 3 kB. Drop it in and every element can speak.">
 
 <!-- OG / Social -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sonic-flow-eta.vercel.app/">
 <meta property="og:title" content="SonicFlow — Sound design, shipped as code">
-<meta property="og:description" content="84 interaction sounds generated live from oscillators. No audio files, no dependencies, under 3 kB. Hear the page — it runs on SonicFlow.">
+<meta property="og:description" content="206 interaction sounds generated live from oscillators. No audio files, no dependencies, under 3 kB. Hear the page — it runs on SonicFlow.">
 <meta property="og:image" content="https://sonic-flow-eta.vercel.app/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SonicFlow — Sound design, shipped as code">
-<meta name="twitter:description" content="84 interaction sounds generated live from oscillators. No audio files, no dependencies, under 3 kB.">
+<meta name="twitter:description" content="206 interaction sounds generated live from oscillators. No audio files, no dependencies, under 3 kB.">
 <meta name="twitter:image" content="https://sonic-flow-eta.vercel.app/og.png">
 
 <!-- Favicon (inline SVG data URI) -->
@@ -28,29 +28,33 @@
 <link rel="canonical" href="https://sonic-flow-eta.vercel.app/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#fafaf9;--bg-el:#ffffff;--bg-card:#f3f3f1;--bg-code:#f0efed;
-  --border:#e8e7e4;--border-s:#d8d7d4;
-  --text:#1a1a1a;--text-m:#5a5a58;--text-d:#9a9a98;
-  --accent:#1a1a1a;--accent-inv:#ffffff;
-  --wave-base:#e8e7e4;--wave-trace:#1a1a1a;--wave-echo:#cccbc8;
-  --shadow:0 1px 3px rgba(0,0,0,.04);
-  --cat-border:3px;
+  --bg:#ffffff;--bg-el:#ffffff;--bg-card:#fafafa;--bg-code:#f5f5f5;
+  --border:#eaeaea;--border-s:#e0e0e0;
+  --text:#171717;--text-m:#666666;--text-d:#a0a0a0;
+  --accent:#000000;--accent-inv:#ffffff;
+  --wave-base:#eaeaea;--wave-trace:#171717;--wave-echo:#d0d0d0;
+  --shadow-card:0 0 0 1px rgba(0,0,0,.05),0 2px 4px rgba(0,0,0,.04),0 8px 16px -8px rgba(0,0,0,.04);
+  --shadow-hover:0 0 0 1px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06),0 20px 32px -8px rgba(0,0,0,.06);
+  --transition:170ms cubic-bezier(.4,0,.2,1);
+  --pad-radius:12px;
 }
 [data-theme="dark"]{
-  --bg:#0b0b0b;--bg-el:#141414;--bg-card:#1c1c1a;--bg-code:#141412;
-  --border:#252523;--border-s:#353533;
-  --text:#eeeee8;--text-m:#8a8a85;--text-d:#5a5a58;
-  --accent:#ffffff;--accent-inv:#111111;
-  --wave-base:#252523;--wave-trace:#ffffff;--wave-echo:#404040;
-  --shadow:0 1px 3px rgba(0,0,0,.3);
+  --bg:#000000;--bg-el:#0a0a0a;--bg-card:#111111;--bg-code:#0a0a0a;
+  --border:#1a1a1a;--border-s:#2a2a2a;
+  --text:#ededed;--text-m:#888888;--text-d:#555555;
+  --accent:#ffffff;--accent-inv:#000000;
+  --wave-base:#1a1a1a;--wave-trace:#ffffff;--wave-echo:#444444;
+  --shadow-card:0 0 0 1px rgba(255,255,255,.05),0 2px 4px rgba(0,0,0,.3),0 8px 16px -4px rgba(0,0,0,.4);
+  --shadow-hover:0 0 0 1px rgba(255,255,255,.1),0 4px 12px rgba(0,0,0,.4),0 20px 32px -8px rgba(0,0,0,.5);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'General Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
-::selection{background:rgba(128,128,128,.15)}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background .35s ease,color .35s ease}
+::selection{background:rgba(0,112,243,.15)}
+[data-theme="dark"] ::selection{background:rgba(255,255,255,.12)}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.88em}
@@ -103,18 +107,19 @@ header{padding:16px 0;border-bottom:1px solid var(--border);transition:border-co
 .sf-tag::before{content:'';position:absolute;top:-4px;left:16px;width:8px;height:8px;background:var(--text);transform:rotate(45deg);border-radius:1px}
 
 /* ===== HERO ===== */
-.hero{padding:72px 0 48px;position:relative;overflow:hidden}
-.hero-canvas{position:absolute;inset:0;z-index:0;opacity:.15;pointer-events:none}
+.hero{padding:80px 0 48px;position:relative;overflow:hidden}
+.hero-canvas{position:absolute;inset:0;z-index:0;opacity:.1;pointer-events:none}
 .hero-content{position:relative;z-index:1;text-align:center}
-.hero h2{font-size:clamp(36px,6.5vw,64px);font-weight:700;line-height:1.08;letter-spacing:-.04em;margin-bottom:20px;max-width:700px;margin-left:auto;margin-right:auto}
-.tagline{max-width:480px;margin:0 auto 32px;font-size:15.5px;color:var(--text-m);line-height:1.65}
-.hero-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:13.5px;font-weight:500;border:1px solid var(--border-s);background:var(--bg-el);color:var(--text-m);transition:all .15s}
-.btn:hover{border-color:var(--text-d);color:var(--text);background:var(--bg-card)}
-.btn:active{transform:scale(.97)}
+.hero h2{font-size:clamp(36px,6.5vw,64px);font-weight:700;line-height:1.08;letter-spacing:-.04em;margin-bottom:20px;max-width:700px;margin-left:auto;margin-right:auto;background:linear-gradient(90deg,#007cf0,#00dfd8,#7928ca,#ff0080,#ff4d4d,#f9cb28);background-size:300% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer-sweep 6s ease-in-out infinite}
+@keyframes shimmer-sweep{0%{background-position:100% 0}50%{background-position:0% 0}100%{background-position:100% 0}}
+.tagline{max-width:480px;margin:0 auto 36px;font-size:16px;color:var(--text-m);line-height:1.7;font-weight:400}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:9999px;font-size:14px;font-weight:500;border:1px solid var(--border-s);background:var(--bg-el);color:var(--text-m);transition:all var(--transition);box-shadow:var(--shadow-card)}
+.btn:hover{border-color:var(--text-d);color:var(--text);box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
 .btn svg{width:14px;height:14px}
-.btn-primary{background:var(--accent);color:var(--accent-inv);border-color:var(--accent)}
-.btn-primary:hover{opacity:.9}
+.btn-primary{background:var(--accent);color:var(--accent-inv);border-color:var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.1)}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(0,0,0,.15);transform:translateY(-1px)}
 
 /* Stats */
 .stats{display:flex;justify-content:center;gap:40px;margin-top:40px;padding-top:32px;border-top:1px solid var(--border);flex-wrap:wrap}
@@ -161,10 +166,10 @@ header{padding:16px 0;border-bottom:1px solid var(--border);transition:border-co
   background:var(--bg-el);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;aspect-ratio:1;cursor:pointer;
-  position:relative;transition:background .12s;
+  position:relative;transition:all var(--transition);
 }
 .sound-cell:hover{background:var(--bg-card)}
-.sound-cell:active{background:var(--bg-code)}
+.sound-cell:active{transform:scale(.96)}
 .sound-cell.active{background:var(--bg-card)}
 .sc-dot{width:12px;height:12px;border-radius:50%;transition:transform .15s}
 .sound-cell:hover .sc-dot{transform:scale(1.3)}
@@ -190,21 +195,21 @@ header{padding:16px 0;border-bottom:1px solid var(--border);transition:border-co
 /* Category filter pills */
 .cat-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
 .cat-pill{
-  padding:7px 14px;border-radius:100px;font-size:12.5px;font-weight:500;
+  padding:7px 16px;border-radius:9999px;font-size:13px;font-weight:500;
   color:var(--text-d);border:1px solid var(--border);background:var(--bg-el);
-  cursor:pointer;transition:all .15s;white-space:nowrap;
+  cursor:pointer;transition:all var(--transition);white-space:nowrap;
 }
-.cat-pill:hover{border-color:var(--border-s);color:var(--text-m)}
-.cat-pill.active{background:var(--accent);color:var(--accent-inv);border-color:var(--accent)}
+.cat-pill:hover{border-color:var(--border-s);color:var(--text-m);box-shadow:var(--shadow-card)}
+.cat-pill.active{background:var(--accent);color:var(--accent-inv);border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.1)}
 
 /* ===== NOW PLAYING BAR (Spotify-style, bottom) ===== */
 .np-bar{
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   background:var(--bg-el);border-top:1px solid var(--border);
-  transform:translateY(100%);transition:transform .3s,background .3s,border-color .3s;
-  box-shadow:0 -4px 20px rgba(0,0,0,.06);
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1),background .3s,border-color .3s;
+  box-shadow:0 -1px 0 0 rgba(0,0,0,.05),0 -4px 16px rgba(0,0,0,.04),0 -16px 40px -8px rgba(0,0,0,.03);
 }
-[data-theme="dark"] .np-bar{box-shadow:0 -4px 20px rgba(0,0,0,.25)}
+[data-theme="dark"] .np-bar{box-shadow:0 -1px 0 0 rgba(255,255,255,.05),0 -4px 16px rgba(0,0,0,.3),0 -16px 40px -8px rgba(0,0,0,.3)}
 .np-bar.visible{transform:translateY(0)}
 .np-inner{
   max-width:1120px;margin:0 auto;padding:0 24px;
@@ -225,15 +230,16 @@ header{padding:16px 0;border-bottom:1px solid var(--border);transition:border-co
 .np-btn{
   width:32px;height:32px;border-radius:8px;
   display:flex;align-items:center;justify-content:center;
-  color:var(--text-m);transition:all .12s;flex-shrink:0;
+  color:var(--text-m);transition:all var(--transition);flex-shrink:0;
 }
 .np-btn:hover{color:var(--text);background:var(--bg-card)}
 .np-btn svg{width:14px;height:14px}
 .np-btn.np-play-btn{
   width:36px;height:36px;border-radius:50%;
   background:var(--accent);color:var(--accent-inv);
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
 }
-.np-btn.np-play-btn:hover{opacity:.85}
+.np-btn.np-play-btn:hover{box-shadow:0 4px 14px rgba(0,0,0,.18);transform:scale(1.05)}
 .np-vol{display:flex;align-items:center;gap:6px;margin-left:4px}
 .np-vol svg{width:14px;height:14px;color:var(--text-d);flex-shrink:0}
 .np-vol input[type=range]{-webkit-appearance:none;width:72px;height:3px;border-radius:2px;background:var(--border);outline:none}
@@ -270,9 +276,9 @@ header{padding:16px 0;border-bottom:1px solid var(--border);transition:border-co
 
 /* Features */
 .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:8px}
-.feat-card{background:var(--bg-el);border:1px solid var(--border);border-radius:14px;padding:28px;cursor:pointer;transition:all .15s;text-align:left}
-.feat-card:hover{border-color:var(--border-s);background:var(--bg-card)}
-.feat-card:active{transform:scale(.98)}
+.feat-card{background:var(--bg-el);border:1px solid var(--border);border-radius:16px;padding:28px;cursor:pointer;transition:all var(--transition);text-align:left;box-shadow:var(--shadow-card)}
+.feat-card:hover{border-color:var(--border-s);box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.feat-card:active{transform:translateY(0)}
 .feat-icon{width:40px;height:40px;border-radius:10px;background:var(--bg-card);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:18px}
 .feat-card h3{font-size:15px;font-weight:600;margin-bottom:6px}
 .feat-card p{font-size:13px;color:var(--text-m);line-height:1.5}
@@ -298,7 +304,7 @@ header{padding:16px 0;border-bottom:1px solid var(--border);transition:border-co
 .cdn-block .c{color:var(--text-d)}.cdn-block .s{color:#2a9d8f}
 [data-theme="dark"] .cdn-block .s{color:#4ecdc4}
 
-.code-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.code-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-card);transition:box-shadow var(--transition),background .3s,border-color .3s}
 .code-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg-el)}
 .code-tabs{display:flex;gap:4px}
 .code-tab{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--text-d);transition:all .15s}
@@ -382,14 +388,14 @@ footer{padding:32px 0;border-top:1px solid var(--border)}
   <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-content">
     <h2>Sound design, shipped as code.</h2>
-    <p class="tagline">84 interaction sounds generated live from oscillators and noise. No audio files, no dependencies, under 3 kB. Hear the page — it's running SonicFlow right now.</p>
+    <p class="tagline">206 interaction sounds generated live from oscillators and noise. No audio files, no dependencies, under 3 kB. Hear the page — it's running SonicFlow right now.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#start">Start building</a>
-      <a class="btn" href="#catalog">Browse all 84 sounds</a>
+      <a class="btn" href="#catalog">Browse all 206 sounds</a>
     </div>
     <div class="stats">
-      <div class="stat"><span class="stat-num">84</span><span class="stat-label">sounds</span></div>
-      <div class="stat"><span class="stat-num">8</span><span class="stat-label">categories</span></div>
+      <div class="stat"><span class="stat-num">206</span><span class="stat-label">sounds</span></div>
+      <div class="stat"><span class="stat-num">14</span><span class="stat-label">categories</span></div>
       <div class="stat"><span class="stat-num">&lt;3kB</span><span class="stat-label">gzipped</span></div>
       <div class="stat"><span class="stat-num">0</span><span class="stat-label">audio files</span></div>
     </div>
@@ -425,7 +431,7 @@ footer{padding:32px 0;border-top:1px solid var(--border)}
 <section class="catalog shell-wide" id="catalog">
   <div class="catalog-header">
     <h2 class="catalog-title">Sound catalog</h2>
-    <div class="catalog-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input id="search-input" type="text" placeholder="Search 84 sounds…" aria-label="Search sounds"></div>
+    <div class="catalog-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input id="search-input" type="text" placeholder="Search 206 sounds…" aria-label="Search sounds"></div>
   </div>
   <div class="cat-filters" id="cat-filters" role="tablist">
     <button class="cat-pill active" data-cat="all" role="tab" aria-selected="true">All</button>
@@ -436,6 +442,13 @@ footer{padding:32px 0;border-top:1px solid var(--border)}
     <button class="cat-pill" data-cat="form" role="tab">Form</button>
     <button class="cat-pill" data-cat="media" role="tab">Media</button>
     <button class="cat-pill" data-cat="gesture" role="tab">Gesture</button>
+    <button class="cat-pill" data-cat="navigation" role="tab">Navigation</button>
+    <button class="cat-pill" data-cat="commerce" role="tab">Commerce</button>
+    <button class="cat-pill" data-cat="social" role="tab">Social</button>
+    <button class="cat-pill" data-cat="ai" role="tab">AI</button>
+    <button class="cat-pill" data-cat="gaming" role="tab">Gaming</button>
+    <button class="cat-pill" data-cat="status" role="tab">Status</button>
+    <button class="cat-pill" data-cat="ambient" role="tab">Ambient</button>
   </div>
   <div class="sound-grid" id="sound-grid" role="list"></div>
 </section>
@@ -500,9 +513,9 @@ footer{padding:32px 0;border-top:1px solid var(--border)}
     <p class="sect-lede">Each card plays its own sound. Tap one.</p>
   </div>
   <div class="features">
-    <button class="feat-card" data-sf="click"><div class="feat-icon">📦</div><h3>Weighs nothing</h3><p>All 84 sounds together weigh less than a single MP3 click. No assets to host or download.</p></button>
+    <button class="feat-card" data-sf="click"><div class="feat-icon">📦</div><h3>Weighs nothing</h3><p>All 206 sounds together weigh less than a single MP3 click. No assets to host or download.</p></button>
     <button class="feat-card" data-sf="bloom"><div class="feat-icon">🔊</div><h3>Generated, not recorded</h3><p>Every cue is built from oscillators at the moment it plays. No sample loading, no latency spikes.</p></button>
-    <button class="feat-card" data-sf="sparkle"><div class="feat-icon">✨</div><h3>84 distinct shapes</h3><p>Chimes, glides, blooms, sweeps, plucks. Every cue has its own character — none are pitch-shifted clones.</p></button>
+    <button class="feat-card" data-sf="sparkle"><div class="feat-icon">✨</div><h3>206 distinct shapes</h3><p>Chimes, glides, blooms, sweeps, plucks, ambient textures, AI cues, and game effects. Every cue has its own character — none are pitch-shifted clones.</p></button>
   </div>
 </section>
 
@@ -759,10 +772,146 @@ const SD=[
 {id:'pull',n:'pull',cat:'gesture',fn:playPull,c:'#4f8cff',d:'Pull to refresh'},
 {id:'drop',n:'drop',cat:'gesture',fn:playDrop,c:'#ff6b5f',d:'Item drop'},
 {id:'drag',n:'drag',cat:'gesture',fn:playDrag,c:'#d9a066',d:'Item drag'},
-{id:'drop-zone',n:'drop-zone',cat:'gesture',fn:playDropZone,c:'#00ca48',d:'Drop zone enter'}
+{id:'drop-zone',n:'drop-zone',cat:'gesture',fn:playDropZone,c:'#00ca48',d:'Drop zone enter'},
+// Expanded feedback
+{id:'info',n:'info',cat:'feedback',fn:()=>tone(880,'sine',.1,.01,.03,.3,.12,.06),c:'#4f8cff',d:'Info tone'},
+{id:'tip',n:'tip',cat:'feedback',fn:()=>{tone(1200,'sine',.08,.005,.02,.2,.1,.04);setTimeout(()=>tone(1400,'sine',.06,.005,.02,.15,.1,.04),50)},c:'#23ad91',d:'Helpful tip'},
+{id:'celebrate',n:'celebrate',cat:'feedback',fn:()=>chord([523,659,784,1047,1319],'sine',.14,.005,.025,.25,.12,.05,40),c:'#ffbb26',d:'Celebration fanfare'},
+{id:'milestone',n:'milestone',cat:'feedback',fn:()=>chord([392,523,659,784],'sine',.16,.008,.04,.35,.2,.1,60),c:'#00c978',d:'Milestone reached'},
+{id:'progress',n:'progress',cat:'feedback',fn:()=>tone(700,'sine',.1,.005,.015,.2,.08,.03),c:'#64c6ff',d:'Progress step'},
+{id:'achievement',n:'achievement',cat:'feedback',fn:()=>chord([523,659,784,1047],'sine',.18,.006,.03,.3,.18,.08,50),c:'#d48f00',d:'Achievement unlocked'},
+// Expanded interaction
+{id:'long-press',n:'long-press',cat:'interaction',fn:()=>{playClick();setTimeout(()=>tone(500,'sine',.12,.01,.02,.3,.1,.08),100)},c:'#7e7e7d',d:'Long press hold'},
+{id:'double-tap',n:'double-tap',cat:'interaction',fn:()=>{playClick();setTimeout(playClick,80)},c:'#111',d:'Double tap'},
+{id:'ripple',n:'ripple',cat:'interaction',fn:()=>{tone(800,'sine',.08,.003,.01,.1,.06,.03);setTimeout(()=>tone(600,'sine',.06,.005,.02,.15,.08,.04),40);setTimeout(()=>tone(400,'sine',.04,.008,.03,.2,.1,.05),100)},c:'#4f8cff',d:'Ripple expand'},
+{id:'bounce',n:'bounce',cat:'interaction',fn:()=>{tone(300,'sine',.2,.003,.01,.1,.04,.02);setTimeout(()=>tone(400,'sine',.12,.003,.01,.08,.04,.02),60);setTimeout(()=>tone(350,'sine',.06,.003,.01,.06,.04,.02),100)},c:'#ffbb26',d:'Elastic bounce'},
+{id:'snap',n:'snap',cat:'interaction',fn:()=>playBandNoise(.4,.01,4000,12),c:'#ff6b5f',d:'Finger snap'},
+{id:'slide',n:'slide',cat:'interaction',fn:()=>playSweepNoise(.12,.15,800,2000),c:'#9f4fff',d:'Slide gesture'},
+// Expanded notification
+{id:'email',n:'email',cat:'notification',fn:()=>{tone(698,'sine',.12,.008,.02,.3,.12,.06);setTimeout(()=>tone(880,'sine',.1,.008,.02,.2,.12,.06),70)},c:'#4f8cff',d:'Email received'},
+{id:'sms',n:'sms',cat:'notification',fn:()=>{tone(1047,'sine',.15,.005,.015,.2,.08,.03);setTimeout(()=>tone(1319,'sine',.12,.005,.015,.15,.08,.03),50)},c:'#00ca48',d:'Text message'},
+{id:'badge',n:'badge',cat:'notification',fn:()=>tone(1500,'sine',.08,.003,.01,.15,.06,.02),c:'#ff6b5f',d:'Badge count'},
+{id:'toast',n:'toast',cat:'notification',fn:()=>{tone(600,'sine',.1,.008,.02,.25,.1,.05);setTimeout(()=>tone(750,'sine',.08,.008,.02,.2,.1,.05),60)},c:'#d9a066',d:'Toast popup'},
+// Expanded system
+{id:'upload',n:'upload',cat:'system',fn:()=>chord([600,700,800],'sine',.1,.01,.02,.3,.1,.05,80),c:'#23ad91',d:'Upload start'},
+{id:'boot',n:'boot',cat:'system',fn:()=>chord([200,400,600,800],'sine',.1,.01,.03,.3,.15,.06,80),c:'#64c6ff',d:'System boot'},
+{id:'shutdown',n:'shutdown',cat:'system',fn:()=>{[800,600,400,200].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.1*(1-i*.06),.01,.03,.3,.15,.06),i*80))},c:'#7e7e7d',d:'System shutdown'},
+{id:'sync',n:'sync',cat:'system',fn:()=>{tone(500,'sine',.1,.005,.01,.2,.05,.02);setTimeout(()=>tone(700,'sine',.08,.005,.01,.15,.05,.02),100);setTimeout(()=>tone(500,'sine',.06,.005,.01,.1,.05,.02),200)},c:'#00b2ff',d:'Sync pulse'},
+// Expanded form
+{id:'autocomplete',n:'autocomplete',cat:'form',fn:()=>chord([800,1000,1200],'sine',.06,.003,.01,.1,.04,.02,30),c:'#4f8cff',d:'Autocomplete match'},
+{id:'dropdown-open',n:'dropdown-open',cat:'form',fn:()=>tone(600,'sine',.1,.005,.02,.2,.08,.03),c:'#64c6ff',d:'Dropdown open'},
+{id:'dropdown-close',n:'dropdown-close',cat:'form',fn:()=>tone(500,'sine',.08,.005,.02,.15,.06,.03),c:'#7e7e7d',d:'Dropdown close'},
+{id:'slider-tick',n:'slider-tick',cat:'form',fn:()=>tone(1200,'sine',.04,.002,.005,.1,.02,.01),c:'#00ca48',d:'Slider increment'},
+{id:'clear',n:'clear',cat:'form',fn:()=>playSweepNoise(.12,.06,3000,500),c:'#ff6b5f',d:'Clear field'},
+{id:'submit',n:'submit',cat:'form',fn:()=>chord([523,659,784],'sine',.2,.008,.03,.3,.12,.06,50),c:'#00c978',d:'Form submit'},
+// Expanded media
+{id:'rewind',n:'rewind',cat:'media',fn:()=>playSweepNoise(.15,.1,1000,4000),c:'#9f4fff',d:'Rewind'},
+{id:'fast-forward',n:'fast-forward',cat:'media',fn:()=>playSweepNoise(.15,.1,4000,1000),c:'#4f8cff',d:'Fast forward'},
+{id:'shuffle',n:'shuffle',cat:'media',fn:()=>{const r=()=>tone(600+Math.random()*600,'sine',.06,.003,.01,.1,.03,.02);r();setTimeout(r,40);setTimeout(r,80)},c:'#ffbb26',d:'Shuffle toggle'},
+{id:'seek',n:'seek',cat:'media',fn:()=>playSweepNoise(.1,.06,2000,3000),c:'#64c6ff',d:'Seek position'},
+// Expanded gesture
+{id:'spread',n:'spread',cat:'gesture',fn:()=>{tone(300,'sine',.06,.005,.01,.08,.04,.02);setTimeout(()=>tone(500,'sine',.08,.005,.01,.12,.04,.02),40);setTimeout(()=>tone(700,'sine',.06,.005,.01,.08,.04,.02),80)},c:'#00b2ff',d:'Spread apart'},
+{id:'rotate',n:'rotate',cat:'gesture',fn:()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(400+i*50,'sine',.04,.003,.008,.1,.03,.01),i*30)},c:'#d48f00',d:'Rotate gesture'},
+{id:'flick',n:'flick',cat:'gesture',fn:()=>playSweepNoise(.2,.06,6000,800),c:'#ff58ae',d:'Quick flick'},
+{id:'shake',n:'shake',cat:'gesture',fn:()=>[0,40,80,120].forEach((d,i)=>setTimeout(()=>tone(i%2?250:200,'sine',.06,.003,.01,.1,.03,.02),d)),c:'#ff6b5f',d:'Device shake'},
+{id:'force-touch',n:'force-touch',cat:'gesture',fn:()=>{tone(200,'sine',.15,.01,.02,.3,.08,.04);setTimeout(()=>tone(300,'sine',.2,.01,.02,.4,.1,.06),80)},c:'#111',d:'Force press'},
+{id:'edge-swipe',n:'edge-swipe',cat:'gesture',fn:()=>playSweepNoise(.18,.12,500,5000),c:'#9f4fff',d:'Edge swipe'},
+// ── NAVIGATION (14) ──
+{id:'page-in',n:'page-in',cat:'navigation',fn:()=>{tone(400,'sine',.12,.01,.02,.3,.1,.05);setTimeout(()=>tone(600,'sine',.1,.01,.02,.25,.1,.05),60)},c:'#4f8cff',d:'Page transition in'},
+{id:'page-out',n:'page-out',cat:'navigation',fn:()=>{tone(600,'sine',.1,.01,.02,.25,.1,.05);setTimeout(()=>tone(400,'sine',.08,.01,.02,.2,.1,.05),60)},c:'#7e7e7d',d:'Page transition out'},
+{id:'tab-switch',n:'tab-switch',cat:'navigation',fn:()=>tone(800,'sine',.08,.003,.01,.15,.05,.02),c:'#64c6ff',d:'Tab switch'},
+{id:'tab-next',n:'tab-next',cat:'navigation',fn:()=>{tone(700,'sine',.07,.003,.01,.15,.05,.02);setTimeout(()=>tone(900,'sine',.06,.003,.01,.1,.05,.02),40)},c:'#00b2ff',d:'Next tab'},
+{id:'tab-prev',n:'tab-prev',cat:'navigation',fn:()=>{tone(900,'sine',.06,.003,.01,.1,.05,.02);setTimeout(()=>tone(700,'sine',.07,.003,.01,.15,.05,.02),40)},c:'#9f4fff',d:'Previous tab'},
+{id:'sidebar-open',n:'sidebar-open',cat:'navigation',fn:()=>tone(350,'sine',.12,.01,.02,.3,.1,.06),c:'#00c978',d:'Sidebar open'},
+{id:'sidebar-close',n:'sidebar-close',cat:'navigation',fn:()=>tone(450,'sine',.1,.01,.02,.2,.08,.04),c:'#7e7e7d',d:'Sidebar close'},
+{id:'breadcrumb',n:'breadcrumb',cat:'navigation',fn:()=>tone(1000,'sine',.05,.003,.01,.1,.04,.02),c:'#d9a066',d:'Breadcrumb click'},
+{id:'back',n:'back',cat:'navigation',fn:()=>{tone(500,'sine',.1,.005,.015,.2,.08,.03);setTimeout(()=>tone(400,'sine',.08,.005,.015,.15,.08,.03),50)},c:'#ff6b5f',d:'Navigate back'},
+{id:'forward',n:'forward',cat:'navigation',fn:()=>{tone(400,'sine',.08,.005,.015,.15,.08,.03);setTimeout(()=>tone(500,'sine',.1,.005,.015,.2,.08,.03),50)},c:'#00ca48',d:'Navigate forward'},
+{id:'home',n:'home',cat:'navigation',fn:()=>chord([523,659,784],'sine',.1,.008,.02,.3,.1,.05,40),c:'#ffbb26',d:'Home'},
+{id:'menu',n:'menu',cat:'navigation',fn:()=>{tone(600,'sine',.08,.005,.01,.15,.05,.02);setTimeout(()=>tone(700,'sine',.06,.005,.01,.1,.05,.02),30);setTimeout(()=>tone(800,'sine',.04,.005,.01,.08,.05,.02),60)},c:'#4f8cff',d:'Menu open'},
+{id:'modal-open',n:'modal-open',cat:'navigation',fn:()=>{tone(400,'sine',.15,.01,.03,.35,.12,.06);setTimeout(()=>tone(600,'sine',.12,.01,.02,.25,.1,.05),80)},c:'#64c6ff',d:'Modal open'},
+{id:'modal-close',n:'modal-close',cat:'navigation',fn:()=>{tone(500,'sine',.1,.01,.02,.2,.08,.04);setTimeout(()=>tone(350,'sine',.08,.01,.02,.15,.08,.04),60)},c:'#999',d:'Modal close'},
+// ── COMMERCE (12) ──
+{id:'cart-add',n:'cart-add',cat:'commerce',fn:()=>chord([523,659,784],'sine',.15,.006,.025,.3,.1,.05,45),c:'#00c978',d:'Add to cart'},
+{id:'cart-remove',n:'cart-remove',cat:'commerce',fn:()=>{[784,659,523].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.1*(1-i*.06),.006,.025,.2,.1,.05),i*45))},c:'#ff6b5f',d:'Remove from cart'},
+{id:'checkout',n:'checkout',cat:'commerce',fn:()=>chord([523,659,784,1047],'sine',.18,.008,.035,.3,.15,.08,50),c:'#00ca48',d:'Checkout'},
+{id:'payment',n:'payment',cat:'commerce',fn:()=>chord([440,554,659,880],'sine',.2,.006,.03,.35,.15,.08,40),c:'#4f8cff',d:'Payment processed'},
+{id:'coupon',n:'coupon',cat:'commerce',fn:()=>chord([1047,1319,1568],'sine',.1,.004,.015,.15,.08,.03,35),c:'#ffbb26',d:'Coupon applied'},
+{id:'receipt',n:'receipt',cat:'commerce',fn:()=>{playNoise(.08,.06,2000);setTimeout(()=>tone(800,'sine',.06,.003,.01,.1,.04,.02),60)},c:'#d9a066',d:'Receipt print'},
+{id:'refund',n:'refund',cat:'commerce',fn:()=>{[659,523,440].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.1*(1-i*.06),.008,.02,.25,.1,.05),i*50))},c:'#9f4fff',d:'Refund issued'},
+{id:'wishlist',n:'wishlist',cat:'commerce',fn:()=>{tone(880,'sine',.1,.005,.015,.2,.1,.04);setTimeout(()=>tone(1108,'sine',.08,.005,.015,.15,.1,.04),60)},c:'#ff58ae',d:'Add to wishlist'},
+{id:'shipping',n:'shipping',cat:'commerce',fn:()=>chord([400,500,600,700],'sine',.08,.008,.02,.2,.1,.04,60),c:'#23ad91',d:'Shipping update'},
+{id:'order-complete',n:'order-complete',cat:'commerce',fn:()=>chord([523,659,784,1047,1319],'sine',.16,.006,.03,.3,.15,.08,45),c:'#00c978',d:'Order complete'},
+{id:'price-up',n:'price-up',cat:'commerce',fn:()=>{tone(600,'sine',.08,.005,.01,.15,.05,.02);setTimeout(()=>tone(800,'sine',.06,.005,.01,.1,.05,.02),40)},c:'#d48f00',d:'Price increase'},
+{id:'price-down',n:'price-down',cat:'commerce',fn:()=>{tone(800,'sine',.06,.005,.01,.1,.05,.02);setTimeout(()=>tone(600,'sine',.08,.005,.01,.15,.05,.02),40)},c:'#00ca48',d:'Price decrease'},
+// ── SOCIAL (12) ──
+{id:'like',n:'like',cat:'social',fn:()=>{tone(880,'sine',.15,.005,.02,.25,.1,.04);setTimeout(()=>tone(1108,'sine',.12,.005,.02,.2,.1,.04),50)},c:'#ff6b5f',d:'Like'},
+{id:'unlike',n:'unlike',cat:'social',fn:()=>{tone(1108,'sine',.08,.005,.02,.15,.08,.03);setTimeout(()=>tone(880,'sine',.06,.005,.02,.1,.08,.03),50)},c:'#999',d:'Unlike'},
+{id:'follow',n:'follow',cat:'social',fn:()=>chord([659,784,1047],'sine',.12,.006,.02,.25,.1,.04,45),c:'#4f8cff',d:'Follow'},
+{id:'unfollow',n:'unfollow',cat:'social',fn:()=>{[1047,784,659].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.08*(1-i*.06),.006,.02,.15,.08,.04),i*45))},c:'#7e7e7d',d:'Unfollow'},
+{id:'share',n:'share',cat:'social',fn:()=>{tone(700,'sine',.1,.005,.015,.2,.08,.04);setTimeout(()=>tone(900,'sine',.12,.005,.015,.25,.1,.04),50);setTimeout(()=>tone(1100,'sine',.08,.005,.015,.15,.08,.04),100)},c:'#00b2ff',d:'Share'},
+{id:'comment',n:'comment',cat:'social',fn:()=>{tone(600,'sine',.08,.005,.015,.2,.08,.03);setTimeout(()=>tone(750,'sine',.06,.005,.015,.15,.08,.03),50)},c:'#ffbb26',d:'New comment'},
+{id:'react',n:'react',cat:'social',fn:()=>tone(1200,'sine',.12,.003,.01,.15,.06,.03),c:'#ff58ae',d:'Reaction'},
+{id:'bookmark',n:'bookmark',cat:'social',fn:()=>{tone(500,'sine',.1,.005,.02,.25,.1,.05);setTimeout(()=>tone(700,'sine',.12,.005,.02,.3,.1,.05),60)},c:'#d48f00',d:'Bookmark saved'},
+{id:'repost',n:'repost',cat:'social',fn:()=>{playSweepNoise(.1,.08,800,3000);setTimeout(()=>tone(800,'sine',.08,.005,.015,.15,.06,.03),100)},c:'#00c978',d:'Repost'},
+{id:'block',n:'block',cat:'social',fn:()=>{tone(200,'square',.1,.005,.02,.15,.08,.03);setTimeout(()=>tone(150,'square',.08,.005,.02,.1,.08,.03),80)},c:'#ff6b5f',d:'Block user'},
+{id:'emoji',n:'emoji',cat:'social',fn:()=>tone(1400,'sine',.08,.003,.01,.1,.04,.02),c:'#ffbb26',d:'Emoji picker'},
+{id:'clap',n:'clap',cat:'social',fn:()=>{playBandNoise(.25,.03,3000,6);setTimeout(()=>playBandNoise(.2,.025,2500,5),70);setTimeout(()=>playBandNoise(.15,.02,2000,4),130)},c:'#d9a066',d:'Clap reaction'},
+// ── AI (12) ──
+{id:'ai-thinking',n:'ai-thinking',cat:'ai',fn:()=>[0,120,240].forEach((d,i)=>setTimeout(()=>tone(500+i*80,'sine',.05,.008,.015,.15,.08,.03),d)),c:'#9f4fff',d:'AI thinking'},
+{id:'ai-streaming',n:'ai-streaming',cat:'ai',fn:()=>{for(let i=0;i<6;i++)setTimeout(()=>tone(600+Math.random()*200,'sine',.03,.002,.006,.08,.02,.01),i*50)},c:'#4f8cff',d:'Token streaming'},
+{id:'ai-generating',n:'ai-generating',cat:'ai',fn:()=>{tone(400,'sine',.06,.01,.02,.2,.08,.04);setTimeout(()=>tone(500,'sine',.05,.01,.02,.15,.08,.04),80);setTimeout(()=>tone(600,'sine',.04,.01,.02,.1,.08,.04),160)},c:'#00b2ff',d:'Generating'},
+{id:'ai-complete',n:'ai-complete',cat:'ai',fn:()=>chord([523,659,784,1047],'sine',.12,.006,.025,.3,.12,.06,45),c:'#00c978',d:'Generation complete'},
+{id:'ai-error',n:'ai-error',cat:'ai',fn:()=>{tone(300,'sine',.08,.01,.03,.2,.1,.06);setTimeout(()=>tone(250,'sine',.06,.01,.03,.15,.1,.06),100)},c:'#ff6b5f',d:'AI error'},
+{id:'ai-typing',n:'ai-typing',cat:'ai',fn:()=>tone(900+Math.random()*200,'sine',.04,.002,.005,.08,.02,.01),c:'#64c6ff',d:'AI typing indicator'},
+{id:'ai-response',n:'ai-response',cat:'ai',fn:()=>{tone(600,'sine',.08,.008,.02,.25,.1,.05);setTimeout(()=>tone(800,'sine',.06,.008,.02,.2,.1,.05),70)},c:'#23ad91',d:'AI response ready'},
+{id:'ai-cancel',n:'ai-cancel',cat:'ai',fn:()=>{tone(400,'triangle',.08,.005,.02,.15,.08,.04);setTimeout(()=>tone(300,'triangle',.06,.005,.02,.1,.08,.04),60)},c:'#7e7e7d',d:'Cancel generation'},
+{id:'ai-suggest',n:'ai-suggest',cat:'ai',fn:()=>tone(1100,'sine',.06,.005,.015,.15,.08,.03),c:'#ffbb26',d:'AI suggestion'},
+{id:'ai-accept',n:'ai-accept',cat:'ai',fn:()=>{tone(700,'sine',.1,.005,.02,.25,.1,.04);setTimeout(()=>tone(900,'sine',.08,.005,.02,.2,.1,.04),50)},c:'#00ca48',d:'Accept suggestion'},
+{id:'ai-reject',n:'ai-reject',cat:'ai',fn:()=>{[600,450].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.08*(1-i*.06),.005,.02,.15,.08,.04),i*60))},c:'#ff58ae',d:'Reject suggestion'},
+{id:'ai-retry',n:'ai-retry',cat:'ai',fn:()=>{playSweepNoise(.1,.06,1000,3000);setTimeout(()=>tone(700,'sine',.06,.005,.01,.15,.06,.03),80)},c:'#d48f00',d:'Retry generation'},
+// ── GAMING (14) ──
+{id:'score',n:'score',cat:'gaming',fn:()=>chord([659,784,1047],'sine',.15,.005,.02,.25,.1,.04,40),c:'#ffbb26',d:'Score point'},
+{id:'level-up',n:'level-up',cat:'gaming',fn:()=>chord([392,523,659,784,1047,1319],'sine',.14,.005,.02,.25,.12,.05,40),c:'#00c978',d:'Level up'},
+{id:'coin',n:'coin',cat:'gaming',fn:()=>{tone(1319,'sine',.2,.003,.01,.1,.06,.02);setTimeout(()=>tone(1760,'sine',.15,.003,.01,.08,.06,.02),50)},c:'#d48f00',d:'Coin collected'},
+{id:'powerup',n:'powerup',cat:'gaming',fn:()=>{for(let i=0;i<6;i++)setTimeout(()=>tone(400+i*100,'sine',.12-i*.015,.005,.01,.15,.06,.02),i*35)},c:'#9f4fff',d:'Power up'},
+{id:'damage',n:'damage',cat:'gaming',fn:()=>{playBandNoise(.3,.04,1500,3);setTimeout(()=>tone(150,'sawtooth',.1,.005,.02,.15,.08,.04),20)},c:'#ff6b5f',d:'Take damage'},
+{id:'heal',n:'heal',cat:'gaming',fn:()=>chord([523,659,784],'sine',.1,.01,.03,.35,.15,.08,60),c:'#00ca48',d:'Heal'},
+{id:'countdown',n:'countdown',cat:'gaming',fn:()=>tone(800,'square',.12,.003,.01,.1,.04,.02),c:'#ff6b5f',d:'Countdown tick'},
+{id:'game-over',n:'game-over',cat:'gaming',fn:()=>{[400,350,300,250,200].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.12*(1-i*.06),.01,.03,.25,.15,.08),i*100))},c:'#999',d:'Game over'},
+{id:'victory',n:'victory',cat:'gaming',fn:()=>chord([523,659,784,1047,1319,1568],'sine',.15,.005,.025,.3,.15,.06,45),c:'#00c978',d:'Victory'},
+{id:'bonus',n:'bonus',cat:'gaming',fn:()=>chord([1047,1319,1568],'sine',.12,.004,.015,.15,.08,.03,30),c:'#ffbb26',d:'Bonus item'},
+{id:'combo',n:'combo',cat:'gaming',fn:()=>{for(let i=0;i<4;i++)setTimeout(()=>tone(800+i*200,'sine',.1-i*.02,.003,.01,.1,.04,.02),i*40)},c:'#4f8cff',d:'Combo chain'},
+{id:'shield',n:'shield',cat:'gaming',fn:()=>tone(300,'sine',.15,.01,.03,.4,.15,.08),c:'#64c6ff',d:'Shield active'},
+{id:'xp',n:'xp',cat:'gaming',fn:()=>{tone(1000,'sine',.08,.003,.01,.1,.05,.02);setTimeout(()=>tone(1200,'sine',.06,.003,.01,.08,.05,.02),40)},c:'#23ad91',d:'XP gained'},
+{id:'jump',n:'jump',cat:'gaming',fn:()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(200,t);o.frequency.exponentialRampToValueAtTime(800,t+.1);g.gain.setValueAtTime(.15*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.2)},c:'#ff58ae',d:'Jump'},
+// ── STATUS (10) ──
+{id:'online',n:'online',cat:'status',fn:()=>chord([523,659,784],'sine',.1,.008,.02,.3,.1,.05,50),c:'#00c978',d:'Online'},
+{id:'offline',n:'offline',cat:'status',fn:()=>{[784,659,523].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.08*(1-i*.06),.008,.02,.2,.1,.05),i*50))},c:'#ff6b5f',d:'Offline'},
+{id:'away',n:'away',cat:'status',fn:()=>tone(600,'sine',.06,.01,.03,.2,.12,.06),c:'#d9a066',d:'Away'},
+{id:'busy',n:'busy',cat:'status',fn:()=>{tone(400,'square',.06,.005,.01,.1,.05,.02);setTimeout(()=>tone(400,'square',.05,.005,.01,.08,.05,.02),120)},c:'#ff6b5f',d:'Busy'},
+{id:'connecting',n:'connecting',cat:'status',fn:()=>[0,150,300].forEach((d,i)=>setTimeout(()=>tone(500+i*50,'sine',.05,.005,.01,.1,.04,.02),d)),c:'#4f8cff',d:'Connecting'},
+{id:'connected',n:'connected',cat:'status',fn:()=>chord([523,784],'sine',.12,.005,.02,.25,.1,.04,40),c:'#00ca48',d:'Connected'},
+{id:'disconnected',n:'disconnected',cat:'status',fn:()=>{[784,523].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.1*(1-i*.06),.005,.02,.2,.08,.04),i*60))},c:'#999',d:'Disconnected'},
+{id:'syncing',n:'syncing',cat:'status',fn:()=>{const s=()=>{tone(700,'sine',.04,.003,.008,.08,.03,.01);setTimeout(()=>tone(900,'sine',.03,.003,.008,.06,.03,.01),40)};s();setTimeout(s,200);setTimeout(s,400)},c:'#00b2ff',d:'Syncing'},
+{id:'permission',n:'permission',cat:'status',fn:()=>tone(880,'sine',.1,.005,.02,.25,.1,.05),c:'#ffbb26',d:'Permission request'},
+{id:'clipboard',n:'clipboard',cat:'status',fn:()=>{playBandNoise(.15,.02,3000,8);setTimeout(()=>tone(1000,'sine',.06,.003,.01,.1,.04,.02),20)},c:'#64c6ff',d:'Clipboard action'},
+// ── AMBIENT (12) ──
+{id:'ambient-hum',n:'ambient-hum',cat:'ambient',fn:()=>{initAudio();const t=now();[100,200,300].forEach(f=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03*globalVol,t+.1);g.gain.setValueAtTime(.03*globalVol,t+.4);g.gain.linearRampToValueAtTime(0,t+.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.7)})},c:'#7e7e7d',d:'Low hum'},
+{id:'ambient-drone',n:'ambient-drone',cat:'ambient',fn:()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(80,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.06*globalVol,t+.15);g.gain.setValueAtTime(.06*globalVol,t+.5);g.gain.linearRampToValueAtTime(0,t+.8);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.9)},c:'#999',d:'Deep drone'},
+{id:'ambient-pulse',n:'ambient-pulse',cat:'ambient',fn:()=>[0,200,400].forEach(d=>setTimeout(()=>tone(200,'sine',.04,.02,.04,.3,.1,.04),d)),c:'#4f8cff',d:'Rhythmic pulse'},
+{id:'ambient-breath',n:'ambient-breath',cat:'ambient',fn:()=>playSweepNoise(.06,.4,200,800),c:'#23ad91',d:'Soft breath'},
+{id:'ambient-static',n:'ambient-static',cat:'ambient',fn:()=>playNoise(.04,.3,1500),c:'#d9a066',d:'White static'},
+{id:'ambient-wind',n:'ambient-wind',cat:'ambient',fn:()=>playSweepNoise(.05,.5,300,1200),c:'#64c6ff',d:'Wind gust'},
+{id:'ambient-rain',n:'ambient-rain',cat:'ambient',fn:()=>{for(let i=0;i<8;i++)setTimeout(()=>playBandNoise(.03,.08,2000+Math.random()*2000,2),i*40+Math.random()*30)},c:'#00b2ff',d:'Rain drops'},
+{id:'ambient-ocean',n:'ambient-ocean',cat:'ambient',fn:()=>{playSweepNoise(.04,.8,200,600);setTimeout(()=>playSweepNoise(.03,.6,400,200),400)},c:'#4f8cff',d:'Ocean wave'},
+{id:'ambient-crickets',n:'ambient-crickets',cat:'ambient',fn:()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(4000+Math.random()*1000,'sine',.02,.001,.005,.05,.02,.01),i*60+Math.random()*40)},c:'#00ca48',d:'Night crickets'},
+{id:'ambient-chatter',n:'ambient-chatter',cat:'ambient',fn:()=>{for(let i=0;i<6;i++)setTimeout(()=>playBandNoise(.02,.06,800+Math.random()*600,3),i*50+Math.random()*30)},c:'#d48f00',d:'Distant chatter'},
+{id:'ambient-tick',n:'ambient-tick',cat:'ambient',fn:()=>playBandNoise(.08,.008,4000,15),c:'#111',d:'Clock tick'},
+{id:'ambient-glow',n:'ambient-glow',cat:'ambient',fn:()=>{initAudio();const t=now();[440,554,659].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.04*globalVol,t+.1+i*.05);g.gain.setValueAtTime(.04*globalVol,t+.3);g.gain.linearRampToValueAtTime(0,t+.5+i*.05);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.6+i*.05)})},c:'#ffbb26',d:'Warm glow'}
 ];
-const catColors={feedback:'#00c978',interaction:'#64c6ff',notification:'#ffbb26',system:'#4f8cff',form:'#9f4fff',media:'#ff6b5f',gesture:'#d9a066'};
-const cats=['feedback','interaction','notification','system','form','media','gesture'];
+const catColors={feedback:'#00c978',interaction:'#64c6ff',notification:'#ffbb26',system:'#4f8cff',form:'#9f4fff',media:'#ff6b5f',gesture:'#d9a066',navigation:'#00b2ff',commerce:'#23ad91',social:'#ff58ae',ai:'#9f4fff',gaming:'#ffbb26',status:'#00ca48',ambient:'#7e7e7d'};
+const cats=['feedback','interaction','notification','system','form','media','gesture','navigation','commerce','social','ai','gaming','status','ambient'];
 
 // ===== CATALOG =====
 const grid=document.getElementById('sound-grid');
