@@ -1,76 +1,28 @@
 /**
  * SonicFlow — Sound design, shipped as code.
- * 210 interaction sounds synthesized live with Web Audio.
+ * 700 interaction sounds synthesized live with Web Audio.
  * https://github.com/uxasim-rgb/sonic-flow
  * MIT License
  */
 
-let ctx, masterGain, globalVol = 0.7, globalPitch = 0;
+let ctx,masterGain,globalVol=.7,globalPitch=0;
 
-function initAudio() {
-  if (ctx) return;
-  ctx = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = ctx.createGain();
-  masterGain.gain.value = globalVol;
-  masterGain.connect(ctx.destination);
-}
-function now() { return ctx ? ctx.currentTime : 0; }
-function fs(f) { return f * Math.pow(2, globalPitch / 12); }
+function initAudio(){if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();masterGain=ctx.createGain();masterGain.gain.value=globalVol;masterGain.connect(ctx.destination)}
+function now(){return ctx?ctx.currentTime:0}
+function fs(f){return f*Math.pow(2,globalPitch/12)}
 
 // ===== CORE SYNTHESIS HELPERS =====
-function tone(freq, type, peak, atk, dcy, sus, rel, dur) {
-  initAudio(); const f = fs(freq), t = now(), o = ctx.createOscillator(), g = ctx.createGain();
-  o.type = type; o.frequency.setValueAtTime(f, t);
-  g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(peak * globalVol, t + atk);
-  g.gain.linearRampToValueAtTime(peak * globalVol * sus, t + atk + dcy);
-  g.gain.linearRampToValueAtTime(0, t + atk + dcy + dur + rel);
-  o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + atk + dcy + dur + rel + .05);
-}
-function noise(peak, dur, lp) {
-  initAudio(); const len = ctx.sampleRate * dur, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-  const s = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter();
-  f.type = 'lowpass'; f.frequency.setValueAtTime(lp, now());
-  g.gain.setValueAtTime(peak * globalVol, now()); g.gain.exponentialRampToValueAtTime(.001, now() + dur);
-  s.buffer = buf; s.connect(f); f.connect(g); g.connect(masterGain); s.start(now());
-}
-function bandNoise(peak, dur, freq, Q) {
-  initAudio(); const len = ctx.sampleRate * dur, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-  const s = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter();
-  f.type = 'bandpass'; f.frequency.setValueAtTime(freq, now()); f.Q.value = Q || 5;
-  g.gain.setValueAtTime(peak * globalVol, now()); g.gain.exponentialRampToValueAtTime(.001, now() + dur);
-  s.buffer = buf; s.connect(f); f.connect(g); g.connect(masterGain); s.start(now());
-}
-function sweep(peak, dur, sf, ef) {
-  initAudio(); const len = ctx.sampleRate * dur, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-  const s = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter();
-  f.type = 'lowpass'; f.frequency.setValueAtTime(sf, now()); f.frequency.linearRampToValueAtTime(ef, now() + dur);
-  g.gain.setValueAtTime(0, now()); g.gain.linearRampToValueAtTime(peak * globalVol, now() + dur * .2);
-  g.gain.linearRampToValueAtTime(0, now() + dur);
-  s.buffer = buf; s.connect(f); f.connect(g); g.connect(masterGain); s.start(now());
-}
-function chord(notes, type, peak, atk, dcy, sus, rel, dur, gap) {
-  notes.forEach((f, i) => setTimeout(() => tone(f, type, peak * (1 - i * .04), atk, dcy, sus, rel, dur), i * (gap || 50)));
-}
-function descend(notes, type, peak, atk, dcy, sus, rel, dur, gap) {
-  notes.forEach((f, i) => setTimeout(() => tone(f, type, peak * (1 - i * .06), atk, dcy, sus, rel, dur), i * (gap || 50)));
-}
-function click() {
-  initAudio(); const t = now(), len = ctx.sampleRate * .015, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (len * .08));
-  const s = ctx.createBufferSource(), g = ctx.createGain(), f = ctx.createBiquadFilter();
-  f.type = 'bandpass'; f.frequency.setValueAtTime(2500, t); f.Q.value = 2;
-  g.gain.setValueAtTime(.35 * globalVol, t); g.gain.exponentialRampToValueAtTime(.001, t + .015);
-  s.buffer = buf; s.connect(f); f.connect(g); g.connect(masterGain); s.start(t);
-}
+function tone(freq,type,peak,atk,dcy,sus,rel,dur){initAudio();const f=fs(freq),t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak*globalVol,t+atk);g.gain.linearRampToValueAtTime(peak*globalVol*sus,t+atk+dcy);g.gain.linearRampToValueAtTime(0,t+atk+dcy+dur+rel);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+atk+dcy+dur+rel+.05)}
+function noise(peak,dur,lp){initAudio();const len=ctx.sampleRate*dur,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(lp,now());g.gain.setValueAtTime(peak*globalVol,now());g.gain.exponentialRampToValueAtTime(.001,now()+dur);s.buffer=buf;s.connect(f);f.connect(g);g.connect(masterGain);s.start(now())}
+function bandNoise(peak,dur,freq,Q){initAudio();const len=ctx.sampleRate*dur,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(freq,now());f.Q.value=Q||5;g.gain.setValueAtTime(peak*globalVol,now());g.gain.exponentialRampToValueAtTime(.001,now()+dur);s.buffer=buf;s.connect(f);f.connect(g);g.connect(masterGain);s.start(now())}
+function sweep(peak,dur,sf,ef){initAudio();const len=ctx.sampleRate*dur,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(sf,now());f.frequency.linearRampToValueAtTime(ef,now()+dur);g.gain.setValueAtTime(0,now());g.gain.linearRampToValueAtTime(peak*globalVol,now()+dur*.2);g.gain.linearRampToValueAtTime(0,now()+dur);s.buffer=buf;s.connect(f);f.connect(g);g.connect(masterGain);s.start(now())}
+function chord(notes,type,peak,atk,dcy,sus,rel,dur,gap){notes.forEach((f,i)=>setTimeout(()=>tone(f,type,peak*(1-i*.04),atk,dcy,sus,rel,dur),i*(gap||50)))}
+function descend(notes,type,peak,atk,dcy,sus,rel,dur,gap){notes.forEach((f,i)=>setTimeout(()=>tone(f,type,peak*(1-i*.06),atk,dcy,sus,rel,dur),i*(gap||50)))}
+function click(){initAudio();const t=now(),len=ctx.sampleRate*.015,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(len*.08));const s=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(2500,t);f.Q.value=2;g.gain.setValueAtTime(.35*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.015);s.buffer=buf;s.connect(f);f.connect(g);g.connect(masterGain);s.start(t)}
 
-// ===== 210 SOUND DEFINITIONS =====
-const sounds = {
+// ===== 700 SOUND DEFINITIONS =====
+const sounds={
 
-  // ── FEEDBACK (20) ──
   'success':         () => chord([523.25, 659.25, 783.99], 'sine', .18, .008, .04, .3, .15, .08, 55),
   'success-soft':    () => chord([523.25, 659.25], 'sine', .1, .015, .06, .4, .2, .12, 70),
   'success-bright':  () => chord([880, 1108.73, 1318.51], 'sine', .15, .005, .03, .2, .1, .06, 45),
@@ -303,33 +255,509 @@ const sounds = {
   'ambient-chatter': () => { for(let i=0;i<6;i++) setTimeout(()=>bandNoise(.02,.06,800+Math.random()*600,3),i*50+Math.random()*30); },
   'ambient-tick':    () => bandNoise(.08,.008,4000,15),
   'ambient-glow':    () => { initAudio();const t=now();[440,554,659].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(f),t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.04*globalVol,t+.1+i*.05);g.gain.setValueAtTime(.04*globalVol,t+.3);g.gain.linearRampToValueAtTime(0,t+.5+i*.05);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.6+i*.05)}); },
+  'ok-soft-tone':()=>tone(523,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'done-soft-ping':()=>{tone(659,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(784,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'ready-soft-chime':()=>{[784,1047,880].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'wait-soft-bloop':()=>chord([1047,880,440,392],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'hold-soft-tick':()=>noise(0.13,0.13,3000),
+  'go-soft-tap':()=>bandNoise(0.15,0.08,2000,7),
+  'stop-soft-pulse':()=>sweep(0.17,0.08,2900,5900),
+  'retry-soft-drone':()=>sweep(0.19,0.1,6500,900),
+  'skip-soft-sweep':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(1000),t);o.frequency.exponentialRampToValueAtTime(fs(1200),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'pass-soft-swell':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1200),t);m.type='sine';m.frequency.setValueAtTime(fs(3000.0),t);mg.gain.setValueAtTime(3600,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'fail-soft-fade':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1023,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'check-soft-rise':()=>{const f=659+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'cross-soft-drop':()=>tone(784,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'star-soft-hit':()=>{tone(1047,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(880,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'heart-soft-knock':()=>{[880,440,392].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'flag-soft-ring':()=>chord([440,392,698,1000],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'pin-soft-hum':()=>noise(0.17,0.17,4000),
+  'clip-soft-buzz':()=>bandNoise(0.19,0.04,1100,3),
+  'lock-soft-whir':()=>sweep(0.21,0.08,3700,8700),
+  'key-soft-fizz':()=>sweep(0.23,0.1,4500,1300),
+  'shield-soft-snap':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(523),t);o.frequency.exponentialRampToValueAtTime(fs(659),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'award-soft-crackle':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(659),t);m.type='sine';m.frequency.setValueAtTime(fs(1648.0),t);mg.gain.setValueAtTime(1977,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'trophy-soft-pop':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1884,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'medal-soft-click':()=>{const f=1047+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'crown-soft-beep':()=>tone(880,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'gem-soft-boop':()=>{tone(440,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(392,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'bolt-soft-blip':()=>{[392,698,1000].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'fire-soft-bleep':()=>chord([698,1000,1200,523],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'ice-soft-warble':()=>noise(0.21,0.21,5000),
+  'wave-soft-trill':()=>bandNoise(0.23,0.08,4700,7),
+  'tap-soft-ping':()=>tone(800,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'press-soft-chime':()=>{tone(1000,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(1200,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'hold-soft-bloop':()=>{[1200,600,400].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'release-soft-tick':()=>chord([600,400,1500,2000],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'drag-soft-tap':()=>noise(0.13,0.13,3000),
+  'flick-soft-pulse':()=>bandNoise(0.15,0.08,2000,7),
+  'swipe-soft-drone':()=>sweep(0.17,0.08,2900,5900),
+  'pinch-soft-sweep':()=>sweep(0.19,0.1,6500,900),
+  'spread-soft-swell':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(900),t);o.frequency.exponentialRampToValueAtTime(fs(1100),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'twist-soft-fade':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1100),t);m.type='sine';m.frequency.setValueAtTime(fs(2750.0),t);mg.gain.setValueAtTime(3300,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'tilt-soft-rise':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1300,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'shake-soft-drop':()=>{const f=1000+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'rotate-soft-hit':()=>tone(1200,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'orbit-soft-knock':()=>{tone(600,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(400,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'pan-soft-ring':()=>{[400,1500,2000].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'scan-soft-hum':()=>chord([1500,2000,300,900],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'poke-soft-buzz':()=>noise(0.17,0.17,4000),
+  'prod-soft-whir':()=>bandNoise(0.19,0.04,1100,3),
+  'nudge-soft-fizz':()=>sweep(0.21,0.08,3700,8700),
+  'bump-soft-snap':()=>sweep(0.23,0.1,4500,1300),
+  'tickle-soft-crackle':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(800),t);o.frequency.exponentialRampToValueAtTime(fs(1000),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'stroke-soft-pop':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1000),t);m.type='sine';m.frequency.setValueAtTime(fs(2500.0),t);mg.gain.setValueAtTime(3000,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'rub-soft-click':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2300,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'pat-soft-beep':()=>{const f=600+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'slap-soft-boop':()=>tone(400,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'jab-soft-blip':()=>{tone(1500,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(2000,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'alert-soft-chime':()=>tone(587,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'warn-soft-bloop':()=>{tone(784,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(880,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'info-soft-tick':()=>{[880,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'news-soft-tap':()=>chord([1047,1319,1760,523],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'update-soft-pulse':()=>noise(0.13,0.13,3000),
+  'event-soft-drone':()=>bandNoise(0.15,0.08,2000,7),
+  'remind-soft-sweep':()=>sweep(0.17,0.08,2900,5900),
+  'schedule-soft-swell':()=>sweep(0.19,0.1,6500,900),
+  'alarm-soft-fade':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(1500),t);o.frequency.exponentialRampToValueAtTime(fs(1800),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'timer-soft-rise':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1800),t);m.type='sine';m.frequency.setValueAtTime(fs(4500.0),t);mg.gain.setValueAtTime(5400,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'clock-soft-drop':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1087,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'bell-soft-hit':()=>{const f=784+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'horn-soft-knock':()=>tone(880,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'siren-soft-ring':()=>{tone(1047,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(1319,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'buzzer-soft-hum':()=>{[1319,1760,523].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'chirp-soft-buzz':()=>chord([1760,523,659,1500],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'tweet-soft-whir':()=>noise(0.17,0.17,4000),
+  'hoot-soft-fizz':()=>bandNoise(0.19,0.04,1100,3),
+  'howl-soft-snap':()=>sweep(0.21,0.08,3700,8700),
+  'bark-soft-crackle':()=>sweep(0.23,0.1,4500,1300),
+  'meow-soft-pop':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(587),t);o.frequency.exponentialRampToValueAtTime(fs(784),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'moo-soft-click':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(784),t);m.type='sine';m.frequency.setValueAtTime(fs(1960.0),t);mg.gain.setValueAtTime(2352,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'baa-soft-beep':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1980,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'oink-soft-boop':()=>{const f=1047+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'quack-soft-blip':()=>tone(1319,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'croak-soft-bleep':()=>{tone(1760,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(523,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'buzz-soft-warble':()=>{[523,659,1500].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'hum-soft-trill':()=>chord([659,1500,1800,587],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'whine-soft-roll':()=>noise(0.21,0.21,5000),
+  'alert-hard-rush':()=>bandNoise(0.23,0.08,4700,7),
+  'warn-hard-whoosh':()=>sweep(0.05,0.08,500,2500),
+  'info-hard-swish':()=>sweep(0.07,0.1,6500,700),
+  'news-hard-swoosh':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(880),t);o.frequency.exponentialRampToValueAtTime(fs(1047),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'update-hard-thwip':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1047),t);m.type='sine';m.frequency.setValueAtTime(fs(2618.0),t);mg.gain.setValueAtTime(3141,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'boot-soft-bloop':()=>tone(440,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'reboot-soft-tick':()=>{tone(554,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(659,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'sleep-soft-tap':()=>{[659,523,392].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'wake-soft-pulse':()=>chord([523,392,784,350],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'hibernate-soft-drone':()=>noise(0.13,0.13,3000),
+  'crash-soft-sweep':()=>bandNoise(0.15,0.08,2000,7),
+  'recover-soft-swell':()=>sweep(0.17,0.08,2900,5900),
+  'backup-soft-fade':()=>sweep(0.19,0.1,6500,900),
+  'restore-soft-rise':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(600),t);o.frequency.exponentialRampToValueAtTime(fs(800),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'sync-soft-drop':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(800),t);m.type='sine';m.frequency.setValueAtTime(fs(2000.0),t);mg.gain.setValueAtTime(2400,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'update-soft-hit':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(940,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'install-soft-knock':()=>{const f=554+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'uninstall-soft-ring':()=>tone(659,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'extract-soft-hum':()=>{tone(523,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(392,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'compress-soft-buzz':()=>{[392,784,350].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'encrypt-soft-whir':()=>chord([784,350,500,600],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'decrypt-soft-fizz':()=>noise(0.17,0.17,4000),
+  'scan-soft-snap':()=>bandNoise(0.19,0.04,1100,3),
+  'detect-soft-crackle':()=>sweep(0.21,0.08,3700,8700),
+  'protect-soft-pop':()=>sweep(0.23,0.1,4500,1300),
+  'quarantine-soft-click':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(440),t);o.frequency.exponentialRampToValueAtTime(fs(554),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'repair-soft-beep':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(554),t);m.type='sine';m.frequency.setValueAtTime(fs(1385.0),t);mg.gain.setValueAtTime(1662,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'defrag-soft-boop':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1759,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'optimize-soft-blip':()=>{const f=523+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'clean-soft-bleep':()=>tone(392,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'purge-soft-warble':()=>{tone(784,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(350,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'flush-soft-trill':()=>{[350,500,600].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'reset-soft-roll':()=>chord([500,600,800,440],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'restart-soft-rush':()=>noise(0.21,0.21,5000),
+  'boot-hard-whoosh':()=>bandNoise(0.23,0.08,4700,7),
+  'reboot-hard-swish':()=>sweep(0.05,0.08,500,2500),
+  'sleep-hard-swoosh':()=>sweep(0.07,0.1,6500,700),
+  'input-soft-tick':()=>tone(600,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'output-soft-tap':()=>{tone(800,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(1000,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'edit-soft-pulse':()=>{[1000,1200,400].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'delete-soft-drone':()=>chord([1200,400,700,900],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'insert-soft-sweep':()=>noise(0.13,0.13,3000),
+  'replace-soft-swell':()=>bandNoise(0.15,0.08,2000,7),
+  'find-soft-fade':()=>sweep(0.17,0.08,2900,5900),
+  'replace-soft-rise':()=>sweep(0.19,0.1,6500,900),
+  'format-soft-drop':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(500),t);o.frequency.exponentialRampToValueAtTime(fs(1300),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'parse-soft-hit':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1300),t);m.type='sine';m.frequency.setValueAtTime(fs(3250.0),t);mg.gain.setValueAtTime(3900,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'encode-soft-knock':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1100,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'decode-soft-ring':()=>{const f=800+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'encrypt-soft-hum':()=>tone(1000,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'hash-soft-buzz':()=>{tone(1200,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(400,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'sign-soft-whir':()=>{[400,700,900].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'verify-soft-fizz':()=>chord([700,900,1100,500],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'compress-soft-snap':()=>noise(0.17,0.17,4000),
+  'expand-soft-crackle':()=>bandNoise(0.19,0.04,1100,3),
+  'wrap-soft-pop':()=>sweep(0.21,0.08,3700,8700),
+  'unwrap-soft-click':()=>sweep(0.23,0.1,4500,1300),
+  'indent-soft-beep':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(600),t);o.frequency.exponentialRampToValueAtTime(fs(800),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'align-soft-boop':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(800),t);m.type='sine';m.frequency.setValueAtTime(fs(2000.0),t);mg.gain.setValueAtTime(2400,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'sort-soft-blip':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2100,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'filter-soft-bleep':()=>{const f=1200+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'group-soft-warble':()=>tone(400,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'split-soft-trill':()=>{tone(700,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(900,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'merge-soft-roll':()=>{[900,1100,500].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'join-soft-rush':()=>chord([1100,500,1300,600],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'clip-soft-whoosh':()=>noise(0.21,0.21,5000),
+  'input-hard-swish':()=>bandNoise(0.23,0.08,4700,7),
+  'output-hard-swoosh':()=>sweep(0.05,0.08,500,2500),
+  'edit-hard-thwip':()=>sweep(0.07,0.1,6500,700),
+  'delete-hard-zip':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(1000),t);o.frequency.exponentialRampToValueAtTime(fs(1200),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'insert-hard-zap':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1200),t);m.type='sine';m.frequency.setValueAtTime(fs(3000.0),t);mg.gain.setValueAtTime(3600,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'play-soft-tap':()=>tone(500,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'pause-soft-pulse':()=>{tone(600,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(800,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'stop-soft-drone':()=>{[800,1000,400].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'record-soft-sweep':()=>chord([1000,400,700,900],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'capture-soft-swell':()=>noise(0.13,0.13,3000),
+  'stream-soft-fade':()=>bandNoise(0.15,0.08,2000,7),
+  'buffer-soft-rise':()=>sweep(0.17,0.08,2900,5900),
+  'cache-soft-drop':()=>sweep(0.19,0.1,6500,900),
+  'render-soft-hit':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(300),t);o.frequency.exponentialRampToValueAtTime(fs(1200),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'export-soft-knock':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1200),t);m.type='sine';m.frequency.setValueAtTime(fs(3000.0),t);mg.gain.setValueAtTime(3600,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'import-soft-ring':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1000,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'convert-soft-hum':()=>{const f=600+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'trim-soft-buzz':()=>tone(800,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'crop-soft-whir':()=>{tone(1000,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(400,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'resize-soft-fizz':()=>{[400,700,900].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'rotate-soft-snap':()=>chord([700,900,1100,300],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'flip-soft-crackle':()=>noise(0.17,0.17,4000),
+  'mirror-soft-pop':()=>bandNoise(0.19,0.04,1100,3),
+  'blend-soft-click':()=>sweep(0.21,0.08,3700,8700),
+  'fade-soft-beep':()=>sweep(0.23,0.1,4500,1300),
+  'dissolve-soft-boop':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(500),t);o.frequency.exponentialRampToValueAtTime(fs(600),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'wipe-soft-blip':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(600),t);m.type='sine';m.frequency.setValueAtTime(fs(1500.0),t);mg.gain.setValueAtTime(1800,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'slide-soft-bleep':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1900,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'push-soft-warble':()=>{const f=1000+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'pull-soft-trill':()=>tone(400,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'zoom-soft-roll':()=>{tone(700,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(900,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'pan-soft-rush':()=>{[900,1100,300].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'tilt-soft-whoosh':()=>chord([1100,300,1200,500],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'dolly-soft-swish':()=>noise(0.21,0.21,5000),
+  'play-hard-swoosh':()=>bandNoise(0.23,0.08,4700,7),
+  'pause-hard-thwip':()=>sweep(0.05,0.08,500,2500),
+  'stop-hard-zip':()=>sweep(0.07,0.1,6500,700),
+  'record-hard-zap':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(800),t);o.frequency.exponentialRampToValueAtTime(fs(1000),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'capture-hard-pow':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1000),t);m.type='sine';m.frequency.setValueAtTime(fs(2500.0),t);mg.gain.setValueAtTime(3000,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'stream-hard-thump':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2100,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'buffer-hard-thud':()=>{const f=700+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'push-soft-pulse':()=>tone(300,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'pull-soft-drone':()=>{tone(400,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(500,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'lift-soft-sweep':()=>{[500,600,200].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'drop-soft-swell':()=>chord([600,200,800,1000],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'throw-soft-fade':()=>noise(0.13,0.13,3000),
+  'catch-soft-rise':()=>bandNoise(0.15,0.08,2000,7),
+  'grab-soft-drop':()=>sweep(0.17,0.08,2900,5900),
+  'release-soft-hit':()=>sweep(0.19,0.1,6500,900),
+  'squeeze-soft-knock':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(250),t);o.frequency.exponentialRampToValueAtTime(fs(700),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'stretch-soft-ring':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(700),t);m.type='sine';m.frequency.setValueAtTime(fs(1750.0),t);mg.gain.setValueAtTime(2100,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'bend-soft-hum':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(800,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'twist-soft-buzz':()=>{const f=400+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'turn-soft-whir':()=>tone(500,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'flip-soft-fizz':()=>{tone(600,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(200,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'spin-soft-snap':()=>{[200,800,1000].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'roll-soft-crackle':()=>chord([800,1000,1500,250],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'rock-soft-pop':()=>noise(0.17,0.17,4000),
+  'tilt-soft-click':()=>bandNoise(0.19,0.04,1100,3),
+  'lean-soft-beep':()=>sweep(0.21,0.08,3700,8700),
+  'fall-soft-boop':()=>sweep(0.23,0.1,4500,1300),
+  'rise-soft-blip':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(300),t);o.frequency.exponentialRampToValueAtTime(fs(400),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'sink-soft-bleep':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(400),t);m.type='sine';m.frequency.setValueAtTime(fs(1000.0),t);mg.gain.setValueAtTime(1200,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'float-soft-warble':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1600,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'fly-soft-trill':()=>{const f=600+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'land-soft-roll':()=>tone(200,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'takeoff-soft-rush':()=>{tone(800,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(1000,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'dive-soft-whoosh':()=>{[1000,1500,250].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'jump-soft-swish':()=>chord([1500,250,700,300],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'hop-soft-swoosh':()=>noise(0.21,0.21,5000),
+  'push-hard-thwip':()=>bandNoise(0.23,0.08,4700,7),
+  'pull-hard-zip':()=>sweep(0.05,0.08,500,2500),
+  'lift-hard-zap':()=>sweep(0.07,0.1,6500,700),
+  'drop-hard-pow':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(500),t);o.frequency.exponentialRampToValueAtTime(fs(600),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'throw-hard-thump':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(600),t);m.type='sine';m.frequency.setValueAtTime(fs(1500.0),t);mg.gain.setValueAtTime(1800,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'catch-hard-thud':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1900,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'grab-hard-clack':()=>{const f=800+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'release-hard-clink':()=>tone(1000,'sine',0.17,0.005,0.03,0.15,0.03,0.02),
+  'squeeze-hard-ding':()=>{tone(1500,'triangle',0.19,0.008,0.035,0.2,0.05,0.04);setTimeout(()=>tone(250,'square',0.15,0.008,0.035,0.16,0.05,0.04),77)},
+  'home-soft-drone':()=>tone(400,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'back-soft-sweep':()=>{tone(500,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(600,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'forward-soft-swell':()=>{[600,800,350].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'up-soft-fade':()=>chord([800,350,450,700],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'down-soft-rise':()=>noise(0.13,0.13,3000),
+  'top-soft-drop':()=>bandNoise(0.15,0.08,2000,7),
+  'bottom-soft-hit':()=>sweep(0.17,0.08,2900,5900),
+  'first-soft-knock':()=>sweep(0.19,0.1,6500,900),
+  'last-soft-ring':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(550),t);o.frequency.exponentialRampToValueAtTime(fs(750),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'prev-soft-hum':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(750),t);m.type='sine';m.frequency.setValueAtTime(fs(1875.0),t);mg.gain.setValueAtTime(2250,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'next-soft-buzz':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(900,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'index-soft-whir':()=>{const f=500+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'contents-soft-fizz':()=>tone(600,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'search-soft-snap':()=>{tone(800,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(350,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'find-soft-crackle':()=>{[350,450,700].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'jump-soft-pop':()=>chord([450,700,900,550],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'skip-soft-click':()=>noise(0.17,0.17,4000),
+  'scroll-soft-beep':()=>bandNoise(0.19,0.04,1100,3),
+  'page-soft-boop':()=>sweep(0.21,0.08,3700,8700),
+  'section-soft-blip':()=>sweep(0.23,0.1,4500,1300),
+  'chapter-soft-bleep':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(400),t);o.frequency.exponentialRampToValueAtTime(fs(500),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'part-soft-warble':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(500),t);m.type='sine';m.frequency.setValueAtTime(fs(1250.0),t);mg.gain.setValueAtTime(1500,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'volume-soft-trill':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1700,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'edition-soft-roll':()=>{const f=800+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'version-soft-rush':()=>tone(350,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'branch-soft-whoosh':()=>{tone(450,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(700,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'merge-soft-swish':()=>{[700,900,550].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'fork-soft-swoosh':()=>chord([900,550,750,400],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'clone-soft-thwip':()=>noise(0.21,0.21,5000),
+  'home-hard-zip':()=>bandNoise(0.23,0.08,4700,7),
+  'back-hard-zap':()=>sweep(0.05,0.08,500,2500),
+  'forward-hard-pow':()=>sweep(0.07,0.1,6500,700),
+  'up-hard-thump':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(600),t);o.frequency.exponentialRampToValueAtTime(fs(800),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'down-hard-thud':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(800),t);m.type='sine';m.frequency.setValueAtTime(fs(2000.0),t);mg.gain.setValueAtTime(2400,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'top-hard-clack':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2050,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'bottom-hard-clink':()=>{const f=450+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'buy-soft-sweep':()=>tone(523,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'sell-soft-swell':()=>{tone(659,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(784,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'trade-soft-fade':()=>{[784,880,440].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'bid-soft-rise':()=>chord([880,440,554,1047],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'offer-soft-drop':()=>noise(0.13,0.13,3000),
+  'deal-soft-hit':()=>bandNoise(0.15,0.08,2000,7),
+  'save-soft-knock':()=>sweep(0.17,0.08,2900,5900),
+  'spend-soft-ring':()=>sweep(0.19,0.1,6500,900),
+  'earn-soft-hum':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(392),t);o.frequency.exponentialRampToValueAtTime(fs(698),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'win-soft-buzz':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(698),t);m.type='sine';m.frequency.setValueAtTime(fs(1745.0),t);mg.gain.setValueAtTime(2094,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'lose-soft-whir':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1023,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'gain-soft-fizz':()=>{const f=659+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'profit-soft-snap':()=>tone(784,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'loss-soft-crackle':()=>{tone(880,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(440,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'tax-soft-pop':()=>{[440,554,1047].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'fee-soft-click':()=>chord([554,1047,1319,392],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'tip-soft-beep':()=>noise(0.17,0.17,4000),
+  'donate-soft-boop':()=>bandNoise(0.19,0.04,1100,3),
+  'subscribe-soft-blip':()=>sweep(0.21,0.08,3700,8700),
+  'renew-soft-bleep':()=>sweep(0.23,0.1,4500,1300),
+  'cancel-soft-warble':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(523),t);o.frequency.exponentialRampToValueAtTime(fs(659),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'refund-soft-trill':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(659),t);m.type='sine';m.frequency.setValueAtTime(fs(1648.0),t);mg.gain.setValueAtTime(1977,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'exchange-soft-roll':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1884,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'return-soft-rush':()=>{const f=880+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'ship-soft-whoosh':()=>tone(440,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'deliver-soft-swish':()=>{tone(554,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(1047,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'track-soft-swoosh':()=>{[1047,1319,392].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'arrive-soft-thwip':()=>chord([1319,392,698,523],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'receive-soft-zip':()=>noise(0.21,0.21,5000),
+  'buy-hard-zap':()=>bandNoise(0.23,0.08,4700,7),
+  'sell-hard-pow':()=>sweep(0.05,0.08,500,2500),
+  'trade-hard-thump':()=>sweep(0.07,0.1,6500,700),
+  'bid-hard-thud':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(784),t);o.frequency.exponentialRampToValueAtTime(fs(880),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'offer-hard-clack':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(880),t);m.type='sine';m.frequency.setValueAtTime(fs(2200.0),t);mg.gain.setValueAtTime(2640,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'deal-hard-clink':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2140,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'save-hard-ding':()=>{const f=554+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'spend-hard-dong':()=>tone(1047,'sine',0.17,0.005,0.03,0.15,0.03,0.02),
+  'earn-hard-tink':()=>{tone(1319,'triangle',0.19,0.008,0.035,0.2,0.05,0.04);setTimeout(()=>tone(392,'square',0.15,0.008,0.035,0.16,0.05,0.04),77)},
+  'post-soft-swell':()=>tone(880,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'reply-soft-fade':()=>{tone(1108,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(1320,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'mention-soft-rise':()=>{[1320,1760,659].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'tag-soft-drop':()=>chord([1760,659,784,1047],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'invite-soft-hit':()=>noise(0.13,0.13,3000),
+  'accept-soft-knock':()=>bandNoise(0.15,0.08,2000,7),
+  'decline-soft-ring':()=>sweep(0.17,0.08,2900,5900),
+  'block-soft-hum':()=>sweep(0.19,0.1,6500,900),
+  'mute-soft-buzz':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(988),t);o.frequency.exponentialRampToValueAtTime(fs(1175),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'report-soft-whir':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1175),t);m.type='sine';m.frequency.setValueAtTime(fs(2938.0),t);mg.gain.setValueAtTime(3525,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'flag-soft-fizz':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1380,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'vote-soft-snap':()=>{const f=1108+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'poll-soft-crackle':()=>tone(1320,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'survey-soft-pop':()=>{tone(1760,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(659,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'quiz-soft-click':()=>{[659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'game-soft-beep':()=>chord([784,1047,523,988],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'challenge-soft-boop':()=>noise(0.17,0.17,4000),
+  'request-soft-blip':()=>bandNoise(0.19,0.04,1100,3),
+  'approve-soft-bleep':()=>sweep(0.21,0.08,3700,8700),
+  'deny-soft-warble':()=>sweep(0.23,0.1,4500,1300),
+  'ignore-soft-trill':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(880),t);o.frequency.exponentialRampToValueAtTime(fs(1108),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'archive-soft-roll':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1108),t);m.type='sine';m.frequency.setValueAtTime(fs(2770.0),t);mg.gain.setValueAtTime(3324,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'pin-soft-rush':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2420,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'unpin-soft-whoosh':()=>{const f=1760+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'highlight-soft-swish':()=>tone(659,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'feature-soft-swoosh':()=>{tone(784,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(1047,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'promote-soft-thwip':()=>{[1047,523,988].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'boost-soft-zip':()=>chord([523,988,1175,880],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'trend-soft-zap':()=>noise(0.21,0.21,5000),
+  'post-hard-pow':()=>bandNoise(0.23,0.08,4700,7),
+  'reply-hard-thump':()=>sweep(0.05,0.08,500,2500),
+  'mention-hard-thud':()=>sweep(0.07,0.1,6500,700),
+  'tag-hard-clack':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(1320),t);o.frequency.exponentialRampToValueAtTime(fs(1760),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'invite-hard-clink':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1760),t);m.type='sine';m.frequency.setValueAtTime(fs(4400.0),t);mg.gain.setValueAtTime(5280,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'accept-hard-ding':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2359,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'decline-hard-dong':()=>{const f=784+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'block-hard-tink':()=>tone(1047,'sine',0.17,0.005,0.03,0.15,0.03,0.02),
+  'mute-hard-tock':()=>{tone(523,'triangle',0.19,0.008,0.035,0.2,0.05,0.04);setTimeout(()=>tone(988,'square',0.15,0.008,0.035,0.16,0.05,0.04),77)},
+  'train-soft-fade':()=>tone(500,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'infer-soft-rise':()=>{tone(600,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(700,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'predict-soft-drop':()=>{[700,800,400].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'classify-soft-hit':()=>chord([800,400,900,1000],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'cluster-soft-knock':()=>noise(0.13,0.13,3000),
+  'embed-soft-ring':()=>bandNoise(0.15,0.08,2000,7),
+  'tokenize-soft-hum':()=>sweep(0.17,0.08,2900,5900),
+  'parse-soft-buzz':()=>sweep(0.19,0.1,6500,900),
+  'generate-soft-whir':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(450),t);o.frequency.exponentialRampToValueAtTime(fs(850),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'summarize-soft-fizz':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(850),t);m.type='sine';m.frequency.setValueAtTime(fs(2125.0),t);mg.gain.setValueAtTime(2550,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'translate-soft-snap':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1000,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'transcribe-soft-crackle':()=>{const f=600+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'synthesize-soft-pop':()=>tone(700,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'recognize-soft-click':()=>{tone(800,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(400,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'detect-soft-beep':()=>{[400,900,1000].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'segment-soft-boop':()=>chord([900,1000,1200,450],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'track-soft-blip':()=>noise(0.17,0.17,4000),
+  'match-soft-bleep':()=>bandNoise(0.19,0.04,1100,3),
+  'rank-soft-warble':()=>sweep(0.21,0.08,3700,8700),
+  'score-soft-trill':()=>sweep(0.23,0.1,4500,1300),
+  'recommend-soft-roll':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(500),t);o.frequency.exponentialRampToValueAtTime(fs(600),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'optimize-soft-rush':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(600),t);m.type='sine';m.frequency.setValueAtTime(fs(1500.0),t);mg.gain.setValueAtTime(1800,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'tune-soft-whoosh':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1800,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'prune-soft-swish':()=>{const f=800+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'quantize-soft-swoosh':()=>tone(400,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'distill-soft-thwip':()=>{tone(900,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(1000,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'ensemble-soft-zip':()=>{[1000,1200,450].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'bootstrap-soft-zap':()=>chord([1200,450,850,500],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'validate-soft-pow':()=>noise(0.21,0.21,5000),
+  'train-hard-thump':()=>bandNoise(0.23,0.08,4700,7),
+  'infer-hard-thud':()=>sweep(0.05,0.08,500,2500),
+  'predict-hard-clack':()=>sweep(0.07,0.1,6500,700),
+  'classify-hard-clink':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(700),t);o.frequency.exponentialRampToValueAtTime(fs(800),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'cluster-hard-ding':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(800),t);m.type='sine';m.frequency.setValueAtTime(fs(2000.0),t);mg.gain.setValueAtTime(2400,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'embed-hard-dong':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2100,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'tokenize-hard-tink':()=>{const f=900+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'parse-hard-tock':()=>tone(1000,'sine',0.17,0.005,0.03,0.15,0.03,0.02),
+  'generate-hard-twang':()=>{tone(1200,'triangle',0.19,0.008,0.035,0.2,0.05,0.04);setTimeout(()=>tone(450,'square',0.15,0.008,0.035,0.16,0.05,0.04),77)},
+  'start-soft-rise':()=>tone(400,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'pause-soft-drop':()=>{tone(500,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(600,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'resume-soft-hit':()=>{[600,800,1000].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'quit-soft-knock':()=>chord([800,1000,1200,200],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'save-soft-ring':()=>noise(0.13,0.13,3000),
+  'load-soft-hum':()=>bandNoise(0.15,0.08,2000,7),
+  'spawn-soft-buzz':()=>sweep(0.17,0.08,2900,5900),
+  'despawn-soft-whir':()=>sweep(0.19,0.1,6500,900),
+  'respawn-soft-fizz':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(1500),t);o.frequency.exponentialRampToValueAtTime(fs(1800),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'warp-soft-snap':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(1800),t);m.type='sine';m.frequency.setValueAtTime(fs(4500.0),t);mg.gain.setValueAtTime(5400,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'portal-soft-crackle':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(900,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'teleport-soft-pop':()=>{const f=500+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'dash-soft-click':()=>tone(600,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'sprint-soft-beep':()=>{tone(800,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(1000,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'crouch-soft-boop':()=>{[1000,1200,200].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'crawl-soft-blip':()=>chord([1200,200,300,1500],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'climb-soft-bleep':()=>noise(0.17,0.17,4000),
+  'swim-soft-warble':()=>bandNoise(0.19,0.04,1100,3),
+  'fly-soft-trill-2':()=>sweep(0.21,0.08,3700,8700),
+  'glide-soft-roll':()=>sweep(0.23,0.1,4500,1300),
+  'sneak-soft-rush':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(400),t);o.frequency.exponentialRampToValueAtTime(fs(500),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'hide-soft-whoosh':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(500),t);m.type='sine';m.frequency.setValueAtTime(fs(1250.0),t);mg.gain.setValueAtTime(1500,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'reveal-soft-swish':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1700,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'discover-soft-swoosh':()=>{const f=800+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'explore-soft-thwip':()=>tone(1000,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'collect-soft-zip':()=>{tone(1200,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(200,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'craft-soft-zap':()=>{[200,300,1500].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'build-soft-pow':()=>chord([300,1500,1800,400],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'destroy-soft-thump':()=>noise(0.21,0.21,5000),
+  'start-hard-thud':()=>bandNoise(0.23,0.08,4700,7),
+  'pause-hard-clack':()=>sweep(0.05,0.08,500,2500),
+  'resume-hard-clink':()=>sweep(0.07,0.1,6500,700),
+  'quit-hard-ding':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(600),t);o.frequency.exponentialRampToValueAtTime(fs(800),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'save-hard-dong':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(800),t);m.type='sine';m.frequency.setValueAtTime(fs(2000.0),t);mg.gain.setValueAtTime(2400,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'load-hard-tink':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2700,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'spawn-hard-tock':()=>{const f=1200+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'ready-soft-drop':()=>tone(523,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'busy-soft-hit':()=>{tone(659,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(784,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'idle-soft-knock':()=>{[784,440,350].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'active-soft-ring':()=>chord([440,350,600,800],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'inactive-soft-hum':()=>noise(0.13,0.13,3000),
+  'pending-soft-buzz':()=>bandNoise(0.15,0.08,2000,7),
+  'queued-soft-whir':()=>sweep(0.17,0.08,2900,5900),
+  'running-soft-fizz':()=>sweep(0.19,0.1,6500,900),
+  'done-soft-snap':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(450),t);o.frequency.exponentialRampToValueAtTime(fs(550),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'error-soft-crackle':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(550),t);m.type='sine';m.frequency.setValueAtTime(fs(1375.0),t);mg.gain.setValueAtTime(1650,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'warn-soft-pop':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1023,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'info-soft-click':()=>{const f=659+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'debug-soft-beep':()=>tone(784,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'trace-soft-boop':()=>{tone(440,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(350,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'fatal-soft-blip':()=>{[350,600,800].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'critical-soft-bleep':()=>chord([600,800,1000,450],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'major-soft-warble':()=>noise(0.17,0.17,4000),
+  'minor-soft-trill':()=>bandNoise(0.19,0.04,1100,3),
+  'patch-soft-roll':()=>sweep(0.21,0.08,3700,8700),
+  'build-soft-rush':()=>sweep(0.23,0.1,4500,1300),
+  'deploy-soft-whoosh':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(523),t);o.frequency.exponentialRampToValueAtTime(fs(659),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'stage-soft-swish':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(659),t);m.type='sine';m.frequency.setValueAtTime(fs(1648.0),t);mg.gain.setValueAtTime(1977,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'prod-soft-swoosh':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1884,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'test-soft-thwip':()=>{const f=440+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'dev-soft-zip':()=>tone(350,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'local-soft-zap':()=>{tone(600,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(800,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'remote-soft-pow':()=>{[800,1000,450].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'online-soft-thump':()=>chord([1000,450,550,523],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'offline-soft-thud':()=>noise(0.21,0.21,5000),
+  'ready-hard-clack':()=>bandNoise(0.23,0.08,4700,7),
+  'busy-hard-clink':()=>sweep(0.05,0.08,500,2500),
+  'idle-hard-ding':()=>sweep(0.07,0.1,6500,700),
+  'active-hard-dong':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(784),t);o.frequency.exponentialRampToValueAtTime(fs(440),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'inactive-hard-tink':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(440),t);m.type='sine';m.frequency.setValueAtTime(fs(1100.0),t);mg.gain.setValueAtTime(1320,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'pending-hard-tock':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(2050,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'queued-hard-twang':()=>{const f=600+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'running-hard-pluck':()=>tone(800,'sine',0.17,0.005,0.03,0.15,0.03,0.02),
+  'done-hard-strum':()=>{tone(1000,'triangle',0.19,0.008,0.035,0.2,0.05,0.04);setTimeout(()=>tone(450,'square',0.15,0.008,0.035,0.16,0.05,0.04),77)},
+  'error-hard-bow':()=>{[450,550,523].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.99,0.011,0.04,0.25,0.07,0.06),i*53))},
+  'warn-hard-slide':()=>chord([550,523,659,784],'sawtooth',0.23,0.014,0.045,0.3,0.09,0.08,54),
+  'wind-soft-hit':()=>tone(100,'sine',0.05,0.002,0.01,0.1,0.03,0.02),
+  'rain-soft-knock':()=>{tone(200,'triangle',0.07,0.005,0.015,0.15,0.05,0.04);setTimeout(()=>tone(300,'square',0.06,0.005,0.015,0.12,0.05,0.04),41)},
+  'storm-soft-ring':()=>{[300,80,150].forEach((f,i)=>setTimeout(()=>tone(f,'square',0.06,0.008,0.02,0.2,0.07,0.06),i*37))},
+  'thunder-soft-hum':()=>chord([80,150,250,50],'sawtooth',0.11,0.011,0.025,0.25,0.09,0.08,48),
+  'lightning-soft-buzz':()=>noise(0.13,0.13,3000),
+  'snow-soft-whir':()=>bandNoise(0.15,0.08,2000,7),
+  'hail-soft-fizz':()=>sweep(0.17,0.08,2900,5900),
+  'fog-soft-snap':()=>sweep(0.19,0.1,6500,900),
+  'mist-soft-crackle':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(60),t);o.frequency.exponentialRampToValueAtTime(fs(120),t+0.25);g.gain.setValueAtTime(0.21*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35)},
+  'cloud-soft-pop':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(120),t);m.type='sine';m.frequency.setValueAtTime(fs(300.0),t);mg.gain.setValueAtTime(360,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.23*globalVol,t+0.014);g.gain.exponentialRampToValueAtTime(.001,t+0.7);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.75);m.start(t);m.stop(t+0.75)},
+  'sun-soft-click':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(600,'square',0.0,0.002,0.02,0.1,0.11,0.06),i*60)},
+  'moon-soft-beep':()=>{const f=200+Math.random()*211;tone(f,'sawtooth',0.07,0.005,0.025,0.15,0.13,0.08)},
+  'star-soft-boop':()=>tone(300,'sine',0.09,0.008,0.03,0.2,0.03,0.02),
+  'space-soft-blip':()=>{tone(80,'triangle',0.11,0.011,0.035,0.25,0.05,0.04);setTimeout(()=>tone(150,'square',0.09,0.011,0.035,0.2,0.05,0.04),53)},
+  'void-soft-bleep':()=>{[150,250,50].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.14,0.014,0.04,0.3,0.07,0.06),i*49))},
+  'dream-soft-warble':()=>chord([250,50,400,60],'sawtooth',0.15,0.002,0.045,0.1,0.09,0.08,60),
+  'sleep-soft-trill':()=>noise(0.17,0.17,4000),
+  'wake-soft-roll':()=>bandNoise(0.19,0.04,1100,3),
+  'dawn-soft-rush':()=>sweep(0.21,0.08,3700,8700),
+  'dusk-soft-whoosh':()=>sweep(0.23,0.1,4500,1300),
+  'noon-soft-swish':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(100),t);o.frequency.exponentialRampToValueAtTime(fs(200),t+0.1);g.gain.setValueAtTime(0.05*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2)},
+  'midnight-soft-swoosh':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(200),t);m.type='sine';m.frequency.setValueAtTime(fs(500.0),t);mg.gain.setValueAtTime(600,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.07*globalVol,t+0.005);g.gain.exponentialRampToValueAtTime(.001,t+0.4);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.45);m.start(t);m.stop(t+0.45)},
+  'spring-soft-thwip':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1400,'square',-0.11,0.008,0.04,0.2,0.11,0.06),i*72)},
+  'summer-soft-zip':()=>{const f=80+Math.random()*223;tone(f,'sawtooth',0.11,0.011,0.045,0.25,0.13,0.08)},
+  'fall-soft-zap':()=>tone(150,'sine',0.13,0.014,0.01,0.3,0.03,0.02),
+  'winter-soft-pow':()=>{tone(250,'triangle',0.15,0.002,0.015,0.1,0.05,0.04);setTimeout(()=>tone(50,'square',0.12,0.002,0.015,0.08,0.05,0.04),65)},
+  'forest-soft-thump':()=>{[50,400,60].forEach((f,i)=>setTimeout(()=>tone(f,'square',-0.49,0.005,0.02,0.15,0.07,0.06),i*41))},
+  'ocean-soft-thud':()=>chord([400,60,120,100],'sawtooth',0.19,0.008,0.025,0.2,0.09,0.08,72),
+  'desert-soft-clack':()=>noise(0.21,0.21,5000),
+  'wind-hard-clink':()=>bandNoise(0.23,0.08,4700,7),
+  'rain-hard-ding':()=>sweep(0.05,0.08,500,2500),
+  'storm-hard-dong':()=>sweep(0.07,0.1,6500,700),
+  'thunder-hard-tink':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(300),t);o.frequency.exponentialRampToValueAtTime(fs(80),t+0.2);g.gain.setValueAtTime(0.09*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+0.25);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3)},
+  'lightning-hard-tock':()=>{initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain(),m=ctx.createOscillator(),mg=ctx.createGain();o.type='triangle';o.frequency.setValueAtTime(fs(80),t);m.type='sine';m.frequency.setValueAtTime(fs(200.0),t);mg.gain.setValueAtTime(240,t);m.connect(mg);mg.connect(o.frequency);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.11*globalVol,t+0.011);g.gain.exponentialRampToValueAtTime(.001,t+0.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.65);m.start(t);m.stop(t+0.65)},
+  'snow-hard-twang':()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1850,'square',-0.31,0.014,0.02,0.3,0.11,0.06),i*54)},
+  'hail-hard-pluck':()=>{const f=250+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
+  'fog-hard-strum':()=>tone(50,'sine',0.17,0.005,0.03,0.15,0.03,0.02),
+  'mist-hard-bow':()=>{tone(400,'triangle',0.19,0.008,0.035,0.2,0.05,0.04);setTimeout(()=>tone(60,'square',0.15,0.008,0.035,0.16,0.05,0.04),77)},
 };
 
 // ===== PUBLIC API =====
-export function play(name, options) {
-  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const fn = sounds[name];
-  if (!fn) { console.warn(`[sonic-flow] Unknown sound: "${name}"`); return; }
-  const prev = globalVol;
-  if (options && typeof options.volume === 'number') globalVol = options.volume;
-  fn();
-  if (options && typeof options.volume === 'number') globalVol = prev;
-}
+export function play(name,options){if(typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const fn=sounds[name];if(!fn){console.warn(`[sonic-flow] Unknown sound: "${name}"`);return}const prev=globalVol;if(options&&typeof options.volume==='number')globalVol=options.volume;fn();if(options&&typeof options.volume==='number')globalVol=prev}
+export function setVolume(v){globalVol=Math.max(0,Math.min(1,v));if(masterGain)masterGain.gain.setTargetAtTime(globalVol,ctx.currentTime,.05)}
+export function setPitch(s){globalPitch=s}
+export function getSounds(){return Object.keys(sounds)}
 
-export function setVolume(v) { globalVol = Math.max(0, Math.min(1, v)); if (masterGain) masterGain.gain.setTargetAtTime(globalVol, ctx.currentTime, .05); }
-export function setPitch(s) { globalPitch = s; }
-export function getSounds() { return Object.keys(sounds); }
+export function bind(opts){if(opts&&typeof opts.volume==='number')setVolume(opts.volume);document.querySelectorAll('[data-sf-hover]').forEach(el=>{const s=el.getAttribute('data-sf-hover')||'hover';el.addEventListener('mouseenter',()=>play(s));el.addEventListener('touchstart',()=>play(s),{passive:true})});document.querySelectorAll('[data-sf-press]').forEach(el=>{const s=el.getAttribute('data-sf-press')||'press';el.addEventListener('mousedown',()=>play(s));el.addEventListener('touchstart',()=>play(s),{passive:true})});document.querySelectorAll('[data-sf-release]').forEach(el=>{const s=el.getAttribute('data-sf-release')||'release';el.addEventListener('mouseup',()=>play(s));el.addEventListener('touchend',()=>play(s),{passive:true})});document.querySelectorAll('[data-sf-toggle]').forEach(el=>{let st=false;el.addEventListener('click',()=>{st=!st;play(st?'toggle-on':'toggle-off')})});document.querySelectorAll('[data-sf-focus]').forEach(el=>el.addEventListener('focus',()=>play('focus')));document.querySelectorAll('[data-sf-blur]').forEach(el=>el.addEventListener('blur',()=>play('blur')));document.querySelectorAll('[data-sf]').forEach(el=>{const s=el.getAttribute('data-sf');if(s)el.addEventListener('click',()=>play(s))})}
 
-export function bind(opts) {
-  if (opts && typeof opts.volume === 'number') setVolume(opts.volume);
-  document.querySelectorAll('[data-sf-hover]').forEach(el => { const s = el.getAttribute('data-sf-hover') || 'hover'; el.addEventListener('mouseenter', () => play(s)); el.addEventListener('touchstart', () => play(s), { passive: true }); });
-  document.querySelectorAll('[data-sf-press]').forEach(el => { const s = el.getAttribute('data-sf-press') || 'press'; el.addEventListener('mousedown', () => play(s)); el.addEventListener('touchstart', () => play(s), { passive: true }); });
-  document.querySelectorAll('[data-sf-release]').forEach(el => { const s = el.getAttribute('data-sf-release') || 'release'; el.addEventListener('mouseup', () => play(s)); el.addEventListener('touchend', () => play(s), { passive: true }); });
-  document.querySelectorAll('[data-sf-toggle]').forEach(el => { let st = false; el.addEventListener('click', () => { st = !st; play(st ? 'toggle-on' : 'toggle-off'); }); });
-  document.querySelectorAll('[data-sf-focus]').forEach(el => el.addEventListener('focus', () => play('focus')));
-  document.querySelectorAll('[data-sf-blur]').forEach(el => el.addEventListener('blur', () => play('blur')));
-  document.querySelectorAll('[data-sf]').forEach(el => { const s = el.getAttribute('data-sf'); if (s) el.addEventListener('click', () => play(s)); });
-}
-
-if (typeof window !== 'undefined') window.SonicFlow = { play, bind, setVolume, setPitch, getSounds };
-export default { play, bind, setVolume, setPitch, getSounds };
+if(typeof window!=='undefined')window.SonicFlow={play,bind,setVolume,setPitch,getSounds};
+export default {play,bind,setVolume,setPitch,getSounds};
