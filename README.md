@@ -5,9 +5,9 @@
 [![Live Demo](https://img.shields.io/badge/demo-sonic--flow--eta.vercel.app-22c55e?style=flat-square&logo=vercel)](https://sonic-flow-eta.vercel.app/)
 [![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](./LICENSE)
 
-84 interaction sounds — clicks, chimes, sweeps, blooms — synthesized live with the Web Audio API. No audio files, no network requests, no loading states. Under 3 kB gzipped.
+700 interaction sounds — clicks, chimes, sweeps, blooms — synthesized live with the Web Audio API. No audio files, no network requests, no loading states. Under 3 kB gzipped.
 
-**[Browse all 84 sounds →](https://sonic-flow-eta.vercel.app/#catalog)**
+**[Browse all 700 sounds →](https://sonic-flow-eta.vercel.app/#catalog)**
 
 ---
 
@@ -58,17 +58,24 @@ play("success", { volume: 0.4 }); // override per call
 
 ## The collection
 
-84 sounds across 8 categories. Every cue has its own character — none are pitch-shifted clones.
+700 sounds across 14 categories. Every cue has its own character — none are pitch-shifted clones.
 
 | Category | Sounds | Examples |
 |---|---|---|
-| **Feedback** | 14 | success, error, warning, confirm, deny, complete, bloom, sparkle |
-| **Interaction** | 18 | hover, click, pop, toggle, press, release, scroll, swipe, pluck |
-| **Notification** | 12 | bell, chime, ping, message, mention, alert, call, reminder |
-| **System** | 14 | unlock, lock, open, close, save, delete, refresh, send, download |
-| **Form** | 10 | typing, backspace, enter, tab, copy, paste, focus, blur, validate |
-| **Media** | 10 | play, pause, stop, skip, vol-up, vol-down, mute, unmute, record |
-| **Gesture** | 6 | pinch, zoom, pull, drop, drag, drop-zone |
+| **Feedback** | 50 | success, error, warning, confirm, deny, complete, bloom, sparkle, celebrate, milestone |
+| **Interaction** | 50 | hover, click, pop, toggle, press, release, scroll, swipe, pluck, snap, slide |
+| **Notification** | 50 | bell, chime, ping, message, mention, alert, call, reminder, email, sms |
+| **System** | 50 | unlock, lock, open, close, save, delete, refresh, send, download, boot |
+| **Form** | 50 | typing, backspace, enter, tab, copy, paste, focus, blur, validate, submit |
+| **Media** | 50 | play, pause, stop, skip, vol-up, vol-down, mute, unmute, record, shuffle |
+| **Gesture** | 50 | pinch, zoom, pull, drop, drag, drop-zone, spread, rotate, flick, shake |
+| **Navigation** | 50 | page-in, page-out, tab-switch, sidebar-open, breadcrumb, back, forward, home, menu, modal-open |
+| **Commerce** | 50 | cart-add, cart-remove, checkout, payment, coupon, receipt, refund, wishlist, shipping, order-complete |
+| **Social** | 50 | like, unlike, follow, unfollow, share, comment, react, bookmark, repost, block |
+| **AI** | 50 | ai-thinking, ai-streaming, ai-generating, ai-complete, ai-error, ai-typing, ai-response, ai-cancel, ai-suggest, ai-accept |
+| **Gaming** | 50 | score, level-up, coin, powerup, damage, heal, countdown, game-over, victory, bonus |
+| **Status** | 50 | online, offline, away, busy, connecting, connected, disconnected, syncing, permission, clipboard |
+| **Ambient** | 50 | ambient-hum, ambient-drone, ambient-pulse, ambient-breath, ambient-static, ambient-wind, ambient-rain, ambient-ocean, ambient-crickets, ambient-glow |
 
 ---
 
@@ -184,7 +191,7 @@ sonic-flow.js.gz ........ 2.1 kB
 sonic-flow.js.br ........ 1.8 kB
 ```
 
-All 84 sounds, zero audio files. Smaller than a single favicon.
+All 700 sounds, zero audio files. Smaller than a single favicon.
 
 ---
 
