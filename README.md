@@ -1,13 +1,14 @@
 # SonicFlow
 
-> **Sound design, shipped as code.**
+700 UI sounds from pure code. No audio files. Under 3 kB.
 
 [![Live Demo](https://img.shields.io/badge/demo-sonic--flow--eta.vercel.app-22c55e?style=flat-square&logo=vercel)](https://sonic-flow-eta.vercel.app/)
+[![npm](https://img.shields.io/npm/v/sonic-flow?style=flat-square&color=22c55e)](https://www.npmjs.com/package/sonic-flow)
 [![License](https://img.shields.io/badge/license-MIT-22c55e?style=flat-square)](./LICENSE)
 
-700 interaction sounds — clicks, chimes, sweeps, blooms — synthesized live with the Web Audio API. No audio files, no network requests, no loading states. Under 3 kB gzipped.
+Every sound is built from oscillators at runtime using the Web Audio API. No MP3s, no WAVs, no network requests, no loading. Just `play("success")` and it plays.
 
-**[Browse all 700 sounds →](https://sonic-flow-eta.vercel.app/#catalog)**
+**[Try them all →](https://sonic-flow-eta.vercel.app/#sounds)**
 
 ---
 
@@ -17,6 +18,8 @@
 npm install sonic-flow
 ```
 
+Or yarn / pnpm:
+
 ```bash
 yarn add sonic-flow
 ```
@@ -25,7 +28,7 @@ yarn add sonic-flow
 pnpm add sonic-flow
 ```
 
-**No bundler?** Drop in a script tag:
+No bundler? Drop a script tag:
 
 ```html
 <script src="https://unpkg.com/sonic-flow@latest"></script>
@@ -34,9 +37,11 @@ pnpm add sonic-flow
 
 ---
 
-## Usage
+## Quick start
 
-Tag any element with a `data-sf-*` attribute and call `bind()` once:
+Two ways to use it.
+
+**Option A: data attributes** — add `data-sf-*` to your HTML elements, call `bind()` once.
 
 ```html
 <button data-sf-press data-sf-release>Save</button>
@@ -44,86 +49,111 @@ Tag any element with a `data-sf-*` attribute and call `bind()` once:
 <input data-sf-toggle type="checkbox" />
 ```
 
-```ts
-import { bind, play, setVolume } from "sonic-flow";
+```js
+import { bind } from "sonic-flow";
+bind();
+```
 
-bind();           // wires every data-sf-* element
-setVolume(0.7);   // master volume, 0 to 1
+Done. The button clicks, the link ticks on hover, the checkbox toggles.
 
-play("success");                  // uses master volume
-play("success", { volume: 0.4 }); // override per call
+**Option B: call `play()` directly** — for when you want control over exactly when a sound fires.
+
+```js
+import { play } from "sonic-flow";
+
+play("success");                  // plays at master volume
+play("error", { volume: 0.3 });   // quieter
 ```
 
 ---
 
-## The collection
+## What's in the box
 
-700 sounds across 14 categories. Every cue has its own character — none are pitch-shifted clones.
+700 sounds across 14 categories. Each one is its own thing — no pitch-shifted copies.
 
-| Category | Sounds | Examples |
+| Category | Count | Some examples |
 |---|---|---|
-| **Feedback** | 50 | success, error, warning, confirm, deny, complete, bloom, sparkle, celebrate, milestone |
-| **Interaction** | 50 | hover, click, pop, toggle, press, release, scroll, swipe, pluck, snap, slide |
-| **Notification** | 50 | bell, chime, ping, message, mention, alert, call, reminder, email, sms |
-| **System** | 50 | unlock, lock, open, close, save, delete, refresh, send, download, boot |
-| **Form** | 50 | typing, backspace, enter, tab, copy, paste, focus, blur, validate, submit |
-| **Media** | 50 | play, pause, stop, skip, vol-up, vol-down, mute, unmute, record, shuffle |
-| **Gesture** | 50 | pinch, zoom, pull, drop, drag, drop-zone, spread, rotate, flick, shake |
-| **Navigation** | 50 | page-in, page-out, tab-switch, sidebar-open, breadcrumb, back, forward, home, menu, modal-open |
-| **Commerce** | 50 | cart-add, cart-remove, checkout, payment, coupon, receipt, refund, wishlist, shipping, order-complete |
-| **Social** | 50 | like, unlike, follow, unfollow, share, comment, react, bookmark, repost, block |
-| **AI** | 50 | ai-thinking, ai-streaming, ai-generating, ai-complete, ai-error, ai-typing, ai-response, ai-cancel, ai-suggest, ai-accept |
-| **Gaming** | 50 | score, level-up, coin, powerup, damage, heal, countdown, game-over, victory, bonus |
-| **Status** | 50 | online, offline, away, busy, connecting, connected, disconnected, syncing, permission, clipboard |
-| **Ambient** | 50 | ambient-hum, ambient-drone, ambient-pulse, ambient-breath, ambient-static, ambient-wind, ambient-rain, ambient-ocean, ambient-crickets, ambient-glow |
+| **Feedback** | 50 | success, error, warning, confirm, deny, complete, bloom, sparkle |
+| **Interaction** | 50 | hover, click, pop, toggle-on, toggle-off, press, release, scroll, swipe |
+| **Notification** | 50 | bell, chime, ping, message, mention, alert, call, reminder |
+| **System** | 50 | unlock, lock, open, close, save, delete, refresh, send, download |
+| **Form** | 50 | typing, backspace, enter, tab, copy, paste, focus, blur, validate |
+| **Media** | 50 | play, pause, stop, skip, vol-up, vol-down, mute, unmute, record |
+| **Gesture** | 50 | pinch, zoom, pull, drop, drag, drop-zone, spread, rotate, flick |
+| **Navigation** | 50 | page-in, page-out, tab-switch, sidebar-open, back, forward, home |
+| **Commerce** | 50 | cart-add, cart-remove, checkout, payment, coupon, receipt, wishlist |
+| **Social** | 50 | like, unlike, follow, unfollow, share, comment, react, bookmark |
+| **AI** | 50 | ai-thinking, ai-streaming, ai-complete, ai-error, ai-typing, ai-response |
+| **Gaming** | 50 | score, level-up, coin, powerup, damage, heal, countdown, game-over |
+| **Status** | 50 | online, offline, away, connecting, connected, syncing, permission |
+| **Ambient** | 50 | ambient-hum, ambient-drone, ambient-pulse, ambient-wind, ambient-rain |
 
 ---
 
 ## Data attributes
 
-| Attribute | Trigger | Default sound |
+| Attribute | When it fires | Default sound |
 |---|---|---|
-| `data-sf-hover` | Pointer enter / touch | hover |
+| `data-sf-hover` | Pointer enters the element | hover |
 | `data-sf-press` | Mouse down / touch start | click |
 | `data-sf-release` | Mouse up / touch end | pop |
-| `data-sf-toggle` | Click | toggle-on / toggle-off |
-| `data-sf-focus` | Focus in | focus |
-| `data-sf-blur` | Focus out | blur |
+| `data-sf-toggle` | Click (alternates) | toggle-on / toggle-off |
+| `data-sf-focus` | Element gets focus | focus |
+| `data-sf-blur` | Element loses focus | blur |
+| `data-sf` | Click | *(whatever you set)* |
 
-Pass a sound name as the value to override: `data-sf-hover="hover-soft"`.
+Override the default by passing a sound name: `data-sf-hover="hover-soft"`.
 
 ---
 
 ## API
 
-### `bind(options?)`
-
-Wires all `data-sf-*` elements. Call once at startup.
-
-```ts
-bind({ volume: 0.7, hover: true });
-```
-
 ### `play(name, options?)`
 
-Play any sound by name.
+Play a sound by name.
 
-```ts
+```js
 play("success");
-play("error", { volume: 0.3 });
+play("notification", { volume: 0.5 });
+```
+
+Skips silently if the user has `prefers-reduced-motion` enabled.
+
+### `bind(options?)`
+
+Finds every `data-sf-*` element on the page and wires up the listeners. Call it once when the page loads.
+
+```js
+bind();
+bind({ volume: 0.6 });  // also sets master volume
 ```
 
 ### `setVolume(value)`
 
-Set master volume (0–1).
+Master volume. Takes a number from 0 to 1.
+
+```js
+setVolume(0.5);
+```
 
 ### `setPitch(semitones)`
 
-Shift all sounds up or down.
+Shift every sound up or down by semitones. 0 is normal. Positive goes higher, negative goes lower.
 
-### `setReverb(amount)`
+```js
+setPitch(2);   // everything two semitones up
+setPitch(-3);  // three semitones down
+setPitch(0);   // back to normal
+```
 
-Set reverb wet/dry mix (0–1).
+### `getSounds()`
+
+Returns an array of all 700 sound names.
+
+```js
+const all = getSounds();
+console.log(all.length); // 700
+```
 
 ---
 
@@ -171,6 +201,37 @@ onMounted(() => bind());
 <button data-sf-press data-sf-release>Save</button>
 ```
 
+**Next.js** (client component)
+
+```tsx
+"use client";
+import { useEffect } from "react";
+import { bind, play } from "sonic-flow";
+
+export default function Page() {
+  useEffect(() => { bind(); }, []);
+  return <button onClick={() => play("confirm")}>Confirm</button>;
+}
+```
+
+---
+
+## Accessibility
+
+SonicFlow checks `prefers-reduced-motion` before every `play()` call. If the user has asked for reduced motion, sounds don't play. You don't need to do anything — it's handled automatically.
+
+---
+
+## Size
+
+```
+sonic-flow.js ........... 4.8 kB
+sonic-flow.js.gz ........ 2.1 kB
+sonic-flow.js.br ........ 1.8 kB
+```
+
+All 700 sounds. Smaller than most favicons.
+
 ---
 
 ## Browser support
@@ -179,19 +240,7 @@ onMounted(() => bind());
 |---|---|---|---|
 | 66+ | 60+ | 14.1+ | 79+ |
 
-Respects `prefers-reduced-motion` — sounds are suppressed when the user has asked for reduced motion.
-
----
-
-## Bundle size
-
-```
-sonic-flow.js ........... 4.8 kB
-sonic-flow.js.gz ........ 2.1 kB
-sonic-flow.js.br ........ 1.8 kB
-```
-
-All 700 sounds, zero audio files. Smaller than a single favicon.
+Uses the standard Web Audio API. Works everywhere that supports `AudioContext`.
 
 ---
 
@@ -200,9 +249,10 @@ All 700 sounds, zero audio files. Smaller than a single favicon.
 ```bash
 git clone https://github.com/uxasim-rgb/sonic-flow.git
 cd sonic-flow
-npm install
 npm run dev
 ```
+
+Open an issue if you want a new sound or find a bug.
 
 ---
 
