@@ -1,4 +1,4 @@
-# SonicFlow
+# Sonic
 
 700 UI sounds from pure code. No audio files. Under 3 kB.
 
@@ -218,7 +218,7 @@ export default function Page() {
 
 ## Accessibility
 
-SonicFlow checks `prefers-reduced-motion` before every `play()` call. If the user has asked for reduced motion, sounds don't play. You don't need to do anything — it's handled automatically.
+Sonic checks `prefers-reduced-motion` before every `play()` call. If the user has asked for reduced motion, sounds don't play. You don't need to do anything — it's handled automatically.
 
 ---
 
