@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cues.uxasim.com/sitemap.xml
+Sitemap: https://sonic.uxasim.com/sitemap.xml
