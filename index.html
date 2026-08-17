@@ -92,7 +92,7 @@ code{font-family:'JetBrains Mono','SF Mono',ui-monospace,SFMono-Regular,monospac
 .animate-in.delay-3{transition-delay:.3s}
 
 /* ── HEADER ── */
-header{position:sticky;top:0;z-index:40;height:var(--header-h);border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--bg) 75%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);transition:border-color .3s,background .3s}
+header{position:sticky;top:0;z-index:40;height:var(--header-h);background:color-mix(in srgb,var(--bg) 75%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);transition:background .3s}
 .header-inner{max-width:var(--max-w);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:100%;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;letter-spacing:-.025em}
 .logo-icon{width:26px;height:26px;display:flex;align-items:center;justify-content:center}
@@ -109,7 +109,7 @@ nav{display:flex;align-items:center;gap:2px}
 [data-theme="dark"] .theme-btn .sun{display:block}
 
 /* ── HERO ── */
-.hero-section{position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-section{position:relative;overflow:hidden}
 .hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.6}
 [data-theme="dark"] .hero-canvas{opacity:.4}
 .hero-glow{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;opacity:.35}
@@ -118,7 +118,7 @@ nav{display:flex;align-items:center;gap:2px}
 .hero-glow-3{width:300px;height:300px;background:linear-gradient(135deg,var(--accent),var(--accent-2));top:50%;left:50%;transform:translate(-50%,-50%);animation:glow-pulse 15s ease-in-out infinite}
 @keyframes glow-float{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-20px)}50%{transform:translate(-20px,30px)}75%{transform:translate(20px,20px)}}
 @keyframes glow-pulse{0%,100%{opacity:.2;transform:translate(-50%,-50%) scale(1)}50%{opacity:.35;transform:translate(-50%,-50%) scale(1.15)}}
-.hero{position:relative;z-index:1;max-width:var(--max-w);margin:0 auto;padding:100px 24px 80px;display:flex;flex-direction:column;align-items:center;gap:28px}
+.hero{position:relative;z-index:1;max-width:var(--max-w);margin:0 auto;padding:140px 24px 120px;display:flex;flex-direction:column;align-items:center;gap:32px}
 .hero h1{max-width:700px;text-align:center;font-size:clamp(36px,6vw,72px);font-weight:700;line-height:1.05;letter-spacing:-.045em;text-wrap:balance}
 .hero h1 .accent-text{background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero h1 .wave-icon{display:inline-block;width:.7em;height:.7em;vertical-align:-0.02em;margin-left:4px;animation:wave-pulse 3s ease-in-out infinite}
@@ -139,20 +139,20 @@ nav{display:flex;align-items:center;gap:2px}
 .gh-btn svg{width:16px;height:16px}
 
 /* ── STATS BAR ── */
-.stats-bar{display:flex;gap:48px;align-items:center;justify-content:center;margin-top:16px;padding-top:32px;border-top:1px solid var(--border)}
+.stats-bar{display:flex;gap:56px;align-items:center;justify-content:center;margin-top:24px;padding-top:40px}
 .stat{display:flex;flex-direction:column;align-items:center;gap:4px}
 .stat-value{font-size:28px;font-weight:700;letter-spacing:-.03em;color:var(--fg);font-variant-numeric:tabular-nums}
 .stat-value .accent-text{background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .stat-label{font-size:13px;font-weight:500;color:var(--fg-d);text-transform:uppercase;letter-spacing:.06em}
 
 /* ── CATEGORY TABS ── */
-.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:20px 24px;border-bottom:1px solid var(--border);max-width:var(--max-w);margin:0 auto;justify-content:center}
+.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:28px 24px;max-width:var(--max-w);margin:0 auto;justify-content:center}
 .cat-pill{padding:8px 18px;border-radius:9999px;font-size:13px;font-weight:500;color:var(--fg-d);border:1px solid var(--border);background:var(--bg-card);cursor:pointer;transition:all .25s var(--ease);white-space:nowrap}
 .cat-pill:hover{border-color:var(--border-s);color:var(--fg-m);box-shadow:var(--shadow-xs)}
 .cat-pill.active{background:var(--primary);color:var(--primary-fg);border-color:var(--primary);box-shadow:var(--shadow-md)}
 
 /* ── SOUND GRID ── */
-.grid-section{border-bottom:1px solid var(--border);background:var(--bg-s)}
+.grid-section{background:var(--bg-s)}
 .sound-grid{max-width:var(--max-w);margin:0 auto;padding:24px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
 .sound-cell{aspect-ratio:1;background:var(--bg-card);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all .3s var(--ease);border-radius:var(--radius-lg);border:1px solid var(--border);box-shadow:var(--shadow-xs);gap:10px}
 .sound-cell:hover{border-color:var(--border-s);box-shadow:var(--shadow-md);transform:translateY(-3px)}
@@ -175,13 +175,13 @@ nav{display:flex;align-items:center;gap:2px}
 .sc-action-btn svg{width:13px;height:13px}
 
 /* ── LOAD MORE ── */
-.load-more-wrap{display:flex;justify-content:center;padding:32px 24px;border-bottom:1px solid var(--border);background:var(--bg-s)}
+.load-more-wrap{display:flex;justify-content:center;padding:40px 24px;background:var(--bg-s)}
 .load-more-btn{padding:12px 32px;border-radius:9999px;font-size:14px;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--fg);transition:all .25s var(--ease);box-shadow:var(--shadow-sm)}
 .load-more-btn:hover{border-color:var(--border-s);box-shadow:var(--shadow-md);transform:translateY(-2px)}
 .load-more-btn:active{transform:translateY(0)}
 
 /* ── NOW PLAYING BAR ── */
-.np-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:color-mix(in srgb,var(--bg-card) 85%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--border);transform:translateY(100%);transition:transform .4s var(--ease-out)}
+.np-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:color-mix(in srgb,var(--bg-card) 85%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);transform:translateY(100%);transition:transform .4s var(--ease-out)}
 .np-bar.visible{transform:translateY(0)}
 .np-inner{max-width:var(--max-w);margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:72px}
 .np-info{display:flex;align-items:center;gap:12px;min-width:200px}
@@ -207,16 +207,16 @@ nav{display:flex;align-items:center;gap:2px}
 .np-vol-val{font-size:12px;color:var(--fg-d);font-weight:500;min-width:20px;text-align:right;font-variant-numeric:tabular-nums}
 
 /* ── SECTIONS ── */
-.band{padding:100px 24px;border-bottom:1px solid var(--border)}
+.band{padding:140px 24px}
 .band-inner{max-width:960px;margin:0 auto}
 .eyebrow{font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
-.band h2{font-size:clamp(28px,4.5vw,44px);font-weight:700;line-height:1.15;letter-spacing:-.035em;margin-bottom:16px;text-wrap:balance}
-.band-lede{max-width:560px;font-size:16px;color:var(--fg-m);line-height:1.7;margin-bottom:40px}
+.band h2{font-size:clamp(28px,4.5vw,44px);font-weight:700;line-height:1.15;letter-spacing:-.035em;margin-bottom:20px;text-wrap:balance}
+.band-lede{max-width:560px;font-size:17px;color:var(--fg-m);line-height:1.75;margin-bottom:48px}
 .band-lede code{background:var(--bg-code);padding:3px 8px;border-radius:6px;font-size:.85em;color:var(--fg);border:1px solid var(--border)}
 
 /* ── DEMO ── */
-.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-md)}
-.demo-cell{background:var(--bg-card);padding:36px;display:flex;align-items:center;justify-content:center;min-height:120px;transition:background .3s}
+.demo{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;border-radius:var(--radius-xl);overflow:hidden}
+.demo-cell{background:var(--bg-s);padding:40px;display:flex;align-items:center;justify-content:center;min-height:120px;transition:background .3s;border-radius:var(--radius-lg)}
 .demo-cell:hover{background:var(--bg-s)}
 .demo-cell .links{display:flex;gap:20px;font-size:14px;color:var(--fg-m)}
 .demo-cell .links span{cursor:pointer;transition:color .15s;padding:4px 0}
@@ -242,7 +242,7 @@ nav{display:flex;align-items:center;gap:2px}
 .demo-notes p{font-size:13px;color:var(--fg-d);margin-top:8px;line-height:1.6}
 
 /* ── FEATURES ── */
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:16px}
 .feat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;cursor:pointer;transition:all .3s var(--ease);text-align:left;box-shadow:var(--shadow-xs)}
 .feat-card:hover{border-color:var(--border-s);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
 .feat-card:active{transform:translateY(-1px);box-shadow:var(--shadow-md)}
@@ -272,7 +272,7 @@ nav{display:flex;align-items:center;gap:2px}
 .cdn-block .c{color:var(--fg-d)}.cdn-block .s{color:var(--accent)}
 .code-card{background:var(--bg-code);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-md);transition:box-shadow .3s}
 .code-card:hover{box-shadow:var(--shadow-lg)}
-.code-head{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg-card)}
+.code-head{display:flex;align-items:center;padding:12px 16px;background:var(--bg-card)}
 .code-tabs{display:flex;gap:4px}
 .code-tab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:500;color:var(--fg-d);transition:all .15s}
 .code-tab.active{background:var(--bg-s);color:var(--fg)}
@@ -291,7 +291,7 @@ nav{display:flex;align-items:center;gap:2px}
 .request-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
 
 /* ── FOOTER ── */
-footer{padding:48px 24px;text-align:center;border-top:1px solid var(--border)}
+footer{padding:80px 24px;text-align:center}
 footer p{font-size:14px;color:var(--fg-m);line-height:2}
 footer a{color:var(--fg);font-weight:500;text-decoration:none;transition:color .15s}
 footer a:hover{color:var(--accent)}
@@ -304,7 +304,7 @@ footer a:hover{color:var(--accent)}
   .sound-grid{grid-template-columns:repeat(5,1fr)}
   .features,.demo,.demo-notes,.ship{grid-template-columns:1fr}
   .stats-bar{gap:32px}
-  .hero{padding:80px 24px 64px}
+  .hero{padding:100px 24px 80px}
 }
 @media(max-width:768px){
   .sound-grid{grid-template-columns:repeat(4,1fr);gap:8px;padding:16px}
@@ -314,14 +314,14 @@ footer a:hover{color:var(--accent)}
   .np-inner{gap:12px;height:64px}
   .np-info{min-width:auto}
   .hero h1{font-size:clamp(28px,8vw,48px)}
-  .hero{padding:64px 20px 48px}
+  .hero{padding:80px 20px 60px}
   .stats-bar{gap:24px;flex-wrap:wrap}
   .stat-value{font-size:22px}
-  .band{padding:72px 20px}
+  .band{padding:100px 20px}
 }
 @media(max-width:480px){
   .sound-grid{grid-template-columns:repeat(3,1fr);gap:6px;padding:12px}
-  .hero{padding:48px 16px 40px;gap:20px}
+  .hero{padding:64px 16px 48px;gap:24px}
   .install-group{width:100%}
   .install-input{width:100%;min-width:0}
   .hero-actions{flex-direction:column;width:100%;padding:0 16px}
@@ -330,7 +330,7 @@ footer a:hover{color:var(--accent)}
   .cat-tabs{padding:16px;gap:6px}
   .stats-bar{gap:16px}
   .stat-value{font-size:20px}
-  .band{padding:56px 16px}
+  .band{padding:80px 16px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
@@ -342,9 +342,9 @@ footer a:hover{color:var(--accent)}
   <div class="header-inner">
     <a class="logo" href="/"><span class="logo-icon" aria-hidden="true"><svg viewBox="0 0 228 273" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M125.535 106.372C142.166 97.4038 158.856 93.3056 177.593 98.8932C191.519 103.039 203.198 112.604 210.005 125.441C228.678 160.913 200.616 204.766 174.666 228.572C171.657 231.332 163.808 238.521 160.122 240.381L159.78 240.544C156.678 243.634 151.82 246.962 146.095 250.219C145.459 250.581 144.813 250.943 144.157 251.302C141.532 252.742 138.755 254.16 135.906 255.531C134.481 256.217 133.038 256.891 131.586 257.549C119.973 262.818 107.813 267.112 100.114 268.709C86.6857 271.398 72.1726 273.555 58.3099 271.988C57.6168 271.91 56.9253 271.822 56.2357 271.724C51.0635 270.994 45.9948 269.718 41.1214 267.727C40.4714 267.462 39.8248 267.184 39.182 266.892C38.218 266.455 37.2624 265.989 36.3158 265.492C35.6847 265.16 35.0578 264.815 34.4349 264.456C34.1727 264.304 33.9129 264.149 33.6556 263.99C30.3099 261.921 27.379 259.193 24.9183 256.019C24.5399 255.531 24.1728 255.032 23.8167 254.524C23.1043 253.507 22.437 252.451 21.8167 251.362C21.5068 250.818 21.2086 250.265 20.9222 249.706C19.9197 247.746 19.0637 245.696 18.3617 243.589C18.1611 242.986 17.9724 242.38 17.7972 241.769C17.3594 240.243 17.0024 238.692 16.7279 237.13C16.6181 236.505 16.5208 235.878 16.4378 235.25C16.3134 234.308 16.2196 233.363 16.1566 232.419C16.1146 231.789 16.0868 231.16 16.0726 230.531C15.9874 226.758 16.4059 223.015 17.3724 219.47C17.5335 218.88 17.71 218.294 17.9017 217.715C17.9975 217.426 18.097 217.138 18.2005 216.852C18.4077 216.28 18.6311 215.714 18.8695 215.156C18.9887 214.877 19.1115 214.599 19.2386 214.324C19.4927 213.773 19.7623 213.231 20.0482 212.697C20.1911 212.43 20.3386 212.166 20.4896 211.903C26.1409 202.076 45.1089 202.978 54.6595 202.615C58.7878 202.458 63.1321 201.536 67.4916 200.633C71.8962 199.386 76.0433 198.066 80.3617 196.541C107.803 186.852 144.183 153.741 134.29 121.237C132.586 115.661 129.585 110.567 125.535 106.372ZM125.129 3.51334C154.896-3.34343 198.027-3.41662 206.709 33.8952C209.175 44.4221 207.31 55.4983 201.533 64.6374C190.011 82.784 176.714 81.1883 157.998 82.362C139.564 83.5188 117.483 94.5389 103.929 106.888L102.998 107.79C95.899 114.745 89.4836 122.79 85.2601 131.324C84.8928 132.066 84.5425 132.812 84.2093 133.561C77.88 147.795 77.8917 163.222 91.0443 177.135C73.618 186.742 53.7865 189.76 37.015 184.97C36.4825 184.818 35.9533 184.658 35.4271 184.49C27.2728 181.889 19.9015 177.387 13.9642 170.841C13.5813 170.419 13.2042 169.989 12.8334 169.549C7.26915 162.959 3.08742 154.444.878273 143.874C-3.47914 123.025 9.16689 93.6361 21.4105 76.2721L22.4378 74.6559C44.3248 40.8013 85.9364 12.5411 125.129 3.51334Z" fill="url(#snc)"/><defs><linearGradient id="snc" x1="108" y1="0" x2="108" y2="273" gradientUnits="userSpaceOnUse"><stop stop-color="#FF5273"/><stop offset="1" stop-color="#FF8D28"/></linearGradient></defs></svg></span>Sonic</a>
     <nav>
-      <a class="nav-link" href="https://www.npmjs.com/package/sonic-flow" target="_blank" rel="noopener">Docs</a>
-      <a class="nav-link" href="#sounds">Sounds</a>
+      <a class="nav-link" href="#sounds">Explore</a>
       <a class="nav-link" href="#start">Get started</a>
+      <a class="nav-link" href="https://www.npmjs.com/package/sonic-flow" target="_blank" rel="noopener">Docs</a>
     </nav>
     <div class="header-right">
       <button class="icon-btn theme-btn" id="theme-btn" aria-label="Toggle theme">
@@ -365,8 +365,8 @@ footer a:hover{color:var(--accent)}
   <div class="hero-glow hero-glow-3" aria-hidden="true"></div>
   <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero">
-    <h1>Give your UI a <span class="accent-text">voice</span><svg class="wave-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.114 5.636a9 9 0 010 12.728"/><path d="M16.463 8.288a5.25 5.25 0 010 7.424"/><path d="M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg></h1>
-    <p class="hero-sub">1000+ interaction sounds, zero audio files. Pure oscillators at runtime. Under 3 kB gzipped. Just import and play.</p>
+    <h1>The sound layer your <span class="accent-text">product</span> deserves</h1>
+    <p class="hero-sub">850+ synthesized interaction sounds. No audio files, no dependencies, no loading. Pure oscillators at runtime in under 3 kB.</p>
     <div class="hero-actions">
       <div class="install-group">
         <span class="install-prompt">$</span>
@@ -377,13 +377,13 @@ footer a:hover{color:var(--accent)}
       </div>
       <a class="gh-btn" href="https://github.com/uxasim-rgb/sonic-flow" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.95C17.525 1.95 22 6.426 22 11.95c0 2.096-.658 4.138-1.88 5.84-1.223 1.702-2.948 2.978-4.933 3.648-.5.1-.687-.212-.687-.475 0-.337.013-1.412.013-2.75 0-.937-.313-1.537-.675-1.85 2.225-.25 4.562-1.1 4.562-4.937 0-1.1-.387-1.988-1.025-2.688.1-.25.45-1.275-.1-2.65 0 0-.838-.275-2.75 1.025a9.28 9.28 0 00-5 0C7.613 6.084 6.775 6.338 6.775 6.338c-.55 1.375-.2 2.4-.1 2.65-.637.7-1.025 1.6-1.025 2.688 0 3.825 2.325 4.688 4.55 4.938-.288.25-.55.687-.637 1.337-.563.263-1.988.688-2.888-.838-.187-.3-.75-1.037-1.537-1.025-.838.013-.338.475.013.663.425.237.912 1.125 1.025 1.412.2.563.85 1.638 3.362 1.175 0 .838.013 1.625.013 1.863 0 .262-.188.575-.688.475A10.003 10.003 0 012 11.95C2 6.426 6.475 1.95 12 1.95z"/></svg>
-        Star on GitHub
+        View on GitHub
       </a>
     </div>
     <div class="stats-bar">
       <div class="stat"><span class="stat-value"><span class="accent-text">850+</span></span><span class="stat-label">Sounds</span></div>
       <div class="stat"><span class="stat-value">28</span><span class="stat-label">Categories</span></div>
-      <div class="stat"><span class="stat-value">&lt;3kB</span><span class="stat-label">Gzipped</span></div>
+      <div class="stat"><span class="stat-value">&lt;3kB</span><span class="stat-label">Total size</span></div>
       <div class="stat"><span class="stat-value">0</span><span class="stat-label">Dependencies</span></div>
     </div>
   </div>
@@ -403,9 +403,9 @@ footer a:hover{color:var(--accent)}
 <!-- How it works -->
 <section class="band animate-in" aria-labelledby="pat-h">
   <div class="band-inner">
-    <div class="eyebrow">How it works</div>
-    <h2 id="pat-h">Add an attribute. That's it.</h2>
-    <p class="band-lede">Put <code>data-sf-*</code> on any element, call <code>bind()</code> once on page load. Try these — they're wired up right here.</p>
+    <div class="eyebrow">Integration</div>
+    <h2 id="pat-h">One attribute. Instant feedback.</h2>
+    <p class="band-lede">Drop <code>data-sf-*</code> on any element, call <code>bind()</code> once. Every interaction below is live — go ahead, try them.</p>
     <div class="demo">
       <div class="demo-cell">
         <button class="demo-like-btn" id="like-demo" aria-pressed="false">
@@ -417,9 +417,9 @@ footer a:hover{color:var(--accent)}
       <div class="demo-cell"><button class="btn" id="save-demo"><span class="face base">Add to cart</span><span class="face alt">Added</span></button></div>
     </div>
     <div class="demo-notes">
-      <div><code>data-sf-press</code><p>A click sound when the user taps. Good for likes, reactions, confirms.</p></div>
-      <div><code>data-sf-toggle</code><p>Different tone for on vs off. Works on any checkbox or switch.</p></div>
-      <div><code>data-sf-press + release</code><p>Mouse-down and mouse-up as a pair. Feels like a real button.</p></div>
+      <div><code>data-sf-press</code><p>Tactile confirmation on tap. Perfect for likes, reactions, and primary actions.</p></div>
+      <div><code>data-sf-toggle</code><p>Distinct tones for on and off states. Works with any checkbox, switch, or toggle.</p></div>
+      <div><code>data-sf-press + release</code><p>Paired mouse-down and mouse-up. Creates the feel of pressing a physical button.</p></div>
     </div>
   </div>
 </section>
@@ -427,13 +427,13 @@ footer a:hover{color:var(--accent)}
 <!-- Why -->
 <section class="band animate-in" aria-labelledby="why-h">
   <div class="band-inner">
-    <div class="eyebrow">Why this exists</div>
-    <h2 id="why-h">Sound makes interfaces feel real.</h2>
-    <p class="band-lede">Click a card. You'll hear what it does.</p>
+    <div class="eyebrow">Built different</div>
+    <h2 id="why-h">Every sound, generated at runtime.</h2>
+    <p class="band-lede">No files to host, no CDN to rely on. Tap a card below to hear the difference.</p>
     <div class="features">
-      <button class="feat-card animate-in delay-1" data-sf="click"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-2-1.5V3a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v1.5L12 3 4 7v5c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12z"/></svg></div><h3>Smaller than a favicon</h3><p>All 850+ sounds combined are under 5 kB gzipped. That's smaller than most icons. No MP3s, no WAVs, nothing to download.</p></button>
-      <button class="feat-card animate-in delay-2" data-sf="bloom"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><h3>Made from math, not recordings</h3><p>Each sound is built from oscillators the moment you call it. No files to preload. No loading delay. Just instant audio.</p></button>
-      <button class="feat-card animate-in delay-3" data-sf="sparkle"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 19v2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M3 12h2M19 12h2M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></div><h3>28 categories, every niche</h3><p>Feedback, notifications, gaming, retro, arcade, nostalgia, cinematic, IoT, accessibility, health, education, devops, and more.</p></button>
+      <button class="feat-card animate-in delay-1" data-sf="click"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-2-1.5V3a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v1.5L12 3 4 7v5c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12z"/></svg></div><h3>Weighs less than a favicon</h3><p>850+ sounds in under 5 kB gzipped. Smaller than a single SVG icon. Zero audio files to load, host, or cache.</p></button>
+      <button class="feat-card animate-in delay-2" data-sf="bloom"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><h3>Synthesized, not sampled</h3><p>Every sound is constructed from oscillators the instant you call it. No preloading, no latency, no network dependency.</p></button>
+      <button class="feat-card animate-in delay-3" data-sf="sparkle"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 19v2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M3 12h2M19 12h2M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg></div><h3>Every interaction, covered</h3><p>28 categories spanning feedback, gaming, retro, arcade, nostalgia, cinematic, accessibility, health, IoT, devops, and beyond.</p></button>
     </div>
   </div>
 </section>
@@ -442,10 +442,10 @@ footer a:hover{color:var(--accent)}
 <section class="band animate-in" id="start" aria-labelledby="start-h">
   <div class="band-inner">
     <div class="eyebrow">Get started</div>
-    <h2 id="start-h">Two steps. You're done.</h2>
+    <h2 id="start-h">Ship sound in under a minute.</h2>
     <div class="ship">
       <div>
-        <p class="step">1. Add Sonic</p>
+        <p class="step">1. Install the package</p>
         <div class="install-tabs">
           <button class="install-tab active" data-method="npm">npm / yarn / pnpm</button>
           <button class="install-tab" data-method="cdn">Script tag</button>
@@ -458,9 +458,9 @@ footer a:hover{color:var(--accent)}
         <div id="install-cdn" class="cdn-block"><code><span class="c">&lt;!-- paste before &lt;/body&gt; --&gt;</span>
 &lt;script src=<span class="s">"https://unpkg.com/sonic-flow@latest"</span>&gt;&lt;/script&gt;
 &lt;script&gt;SonicFlow.bind();&lt;/script&gt;</code></div>
-        <p class="step-note">No build step needed with the script tag. Drop it in any HTML page.</p>
-        <p class="step">2. Wire up your elements</p>
-        <p class="step-note">Add <code>data-sf-*</code> attributes to buttons, links, inputs — then call <code>bind()</code> when the page loads.</p>
+        <p class="step-note">No build step required with the script tag. Works in any HTML page, any framework.</p>
+        <p class="step">2. Connect your interface</p>
+        <p class="step-note">Tag elements with <code>data-sf-*</code> attributes, then call <code>bind()</code> on page load. That's the entire setup.</p>
       </div>
       <div class="code-card">
         <div class="code-head"><div class="code-tabs"><button class="code-tab active" data-pane="p-html">index.html</button><button class="code-tab" data-pane="p-ts">app.ts</button><button class="code-tab" data-pane="p-cdn">CDN</button></div></div>
@@ -509,7 +509,7 @@ play(<span class="s">"success"</span>, { volume: 0.4 }); <span class="c">// over
 <!-- Now Playing Bar -->
 <div class="np-bar" id="np-bar" role="status" aria-live="polite">
   <div class="np-inner">
-    <div class="np-info"><span class="np-dot" id="np-dot" style="background:#999"></span><div class="np-meta"><div class="np-name" id="np-name">—</div><div class="np-desc" id="np-desc">Tap a sound to preview</div></div></div>
+    <div class="np-info"><span class="np-dot" id="np-dot" style="background:#999"></span><div class="np-meta"><div class="np-name" id="np-name">—</div><div class="np-desc" id="np-desc">Select any sound to preview</div></div></div>
     <div class="np-wave"><svg viewBox="0 0 300 20" preserveAspectRatio="none"><line class="baseline" x1="0" y1="10" x2="300" y2="10"/><path class="trace echo" id="trace-echo" d=""/><path class="trace" id="trace" d=""/></svg></div>
     <div class="np-controls">
       <button class="np-btn np-play-btn" id="np-replay" title="Play again"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
@@ -520,12 +520,12 @@ play(<span class="s">"success"</span>, { volume: 0.4 }); <span class="c">// over
 </div>
 
 <footer>
-  <p>MIT licensed. Made by <a href="https://uxasim.com" target="_blank" rel="noopener">Asim</a></p>
+  <p>Open source under MIT. Designed and built by <a href="https://uxasim.com" target="_blank" rel="noopener">Asim</a></p>
   <div class="footer-links">
     <a href="https://learn.uxasim.com" target="_blank" rel="noopener">Learn</a>
     <a href="https://vault.uxasim.com" target="_blank" rel="noopener">Vault</a>
     <a href="https://uxasim.com" target="_blank" rel="noopener">Portfolio</a>
-    <a href="https://github.com/uxasim-rgb/sonic-flow" target="_blank" rel="noopener">Source</a>
+    <a href="https://github.com/uxasim-rgb/sonic-flow" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
 
@@ -1593,7 +1593,7 @@ function renderGrid() {
   if (visibleCount >= list.length) {
     const req = document.createElement('div');
     req.className = 'request-cell';
-    req.innerHTML = '<span>Don\'t see what you need?</span><p>Open an issue and describe the sound. If it makes sense, it goes in.</p><a class="request-btn" href="https://github.com/uxasim-rgb/sonic-flow/issues/new" target="_blank" rel="noopener">Request a sound</a>';
+    req.innerHTML = '<span>Need a specific sound?</span><p>Describe what you\'re looking for and we\'ll build it into the library.</p><a class="request-btn" href="https://github.com/uxasim-rgb/sonic-flow/issues/new" target="_blank" rel="noopener">Request a sound</a>';
     grid.appendChild(req);
   }
 
