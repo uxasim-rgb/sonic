@@ -1,6 +1,6 @@
 {
   "name": "sonic-flow",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "700 interaction sounds synthesized live with Web Audio. No files, no dependencies, under 3 kB.",
   "main": "src/index.js",
   "module": "src/index.js",

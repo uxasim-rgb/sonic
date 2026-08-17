@@ -1,6 +1,6 @@
 /**
  * SonicFlow — Sound design, shipped as code.
- * 700 interaction sounds synthesized live with Web Audio.
+ * 1000+ interaction sounds synthesized live with Web Audio.
  * https://github.com/uxasim-rgb/sonic-flow
  * MIT License
  */
@@ -20,7 +20,7 @@ function chord(notes,type,peak,atk,dcy,sus,rel,dur,gap){notes.forEach((f,i)=>set
 function descend(notes,type,peak,atk,dcy,sus,rel,dur,gap){notes.forEach((f,i)=>setTimeout(()=>tone(f,type,peak*(1-i*.06),atk,dcy,sus,rel,dur),i*(gap||50)))}
 function click(){initAudio();const t=now(),len=ctx.sampleRate*.015,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(len*.08));const s=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(2500,t);f.Q.value=2;g.gain.setValueAtTime(.35*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.015);s.buffer=buf;s.connect(f);f.connect(g);g.connect(masterGain);s.start(t)}
 
-// ===== 700 SOUND DEFINITIONS =====
+// ===== 1000+ SOUND DEFINITIONS =====
 const sounds={
 
   'success':         () => chord([523.25, 659.25, 783.99], 'sine', .18, .008, .04, .3, .15, .08, 55),
@@ -749,6 +749,184 @@ const sounds={
   'hail-hard-pluck':()=>{const f=250+Math.random()*235;tone(f,'sawtooth',0.15,0.002,0.025,0.1,0.13,0.08)},
   'fog-hard-strum':()=>tone(50,'sine',0.17,0.005,0.03,0.15,0.03,0.02),
   'mist-hard-bow':()=>{tone(400,'triangle',0.19,0.008,0.035,0.2,0.05,0.04);setTimeout(()=>tone(60,'square',0.15,0.008,0.035,0.16,0.05,0.04),77)},
+
+  // ── RETRO (20) ──
+  'retro-blip':       () => tone(1200,'square',.2,.002,.008,.05,.03,.01),
+  'retro-bloop':      () => tone(300,'square',.25,.003,.01,.08,.04,.02),
+  'retro-laser':      () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(fs(2000),t);o.frequency.exponentialRampToValueAtTime(fs(200),t+.15);g.gain.setValueAtTime(.2*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.25); },
+  'retro-jump':       () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(fs(200),t);o.frequency.linearRampToValueAtTime(fs(800),t+.08);o.frequency.linearRampToValueAtTime(fs(300),t+.15);g.gain.setValueAtTime(.18*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.22); },
+  'retro-coin':       () => { tone(1319,'square',.2,.002,.005,.05,.03,.01); setTimeout(()=>tone(1760,'square',.18,.002,.005,.04,.03,.01),50); },
+  'retro-powerup':    () => { for(let i=0;i<6;i++) setTimeout(()=>tone(200+i*100,'square',.15-i*.02,.002,.008,.08,.04,.02),i*40); },
+  'retro-death':      () => [400,300,200,100].forEach((f,i)=>setTimeout(()=>tone(f,'square',.15,.005,.02,.1,.06,.03),i*100)),
+  'retro-select':     () => tone(800,'square',.18,.002,.01,.08,.04,.02),
+  'retro-start':      () => [523,659,784].forEach((f,i)=>setTimeout(()=>tone(f,'square',.16,.003,.01,.1,.05,.03),i*80)),
+  'retro-pause':      () => { tone(400,'square',.15,.003,.01,.05,.03,.01); setTimeout(()=>tone(400,'square',.12,.003,.01,.05,.03,.01),100); },
+  'retro-1up':        () => [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,'square',.14-i*.02,.002,.008,.06,.04,.02),i*50)),
+  'retro-warp':       () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(fs(200),t);o.frequency.exponentialRampToValueAtTime(fs(3000),t+.12);g.gain.setValueAtTime(.18*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.2); },
+  'retro-hit':        () => { bandNoise(.3,.03,2000,4); setTimeout(()=>tone(120,'square',.15,.005,.02,.1,.06,.03),15); },
+  'retro-miss':       () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(fs(600),t);o.frequency.exponentialRampToValueAtTime(fs(200),t+.1);g.gain.setValueAtTime(.12*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.12);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.15); },
+  'retro-shield':     () => chord([300,400,500,600],'square',.12,.003,.008,.06,.04,.02,30),
+  'retro-bomb':       () => { noise(.25,.12,1500); setTimeout(()=>descend([200,150,100,60],'square',.15,.005,.02,.08,.06,.03,40),20); },
+  'retro-pickup':     () => { tone(880,'square',.15,.002,.006,.04,.03,.01); setTimeout(()=>tone(1175,'square',.13,.002,.006,.04,.03,.01),35); },
+  'retro-door':       () => { tone(200,'square',.12,.005,.015,.1,.06,.03); setTimeout(()=>tone(400,'square',.14,.005,.015,.1,.06,.03),80); },
+  'retro-stairs':     () => [440,554,659].forEach((f,i)=>setTimeout(()=>tone(f,'square',.12,.002,.008,.06,.03,.02),i*60)),
+  'retro-secret':     () => [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.1-i*.015,.003,.01,.08,.06,.03),i*70)),
+
+  // ── ARCADE (18) ──
+  'arcade-insert-coin':() => { bandNoise(.2,.02,5000,10); setTimeout(()=>tone(1760,'sine',.15,.003,.01,.08,.06,.03),30); },
+  'arcade-ready':     () => { tone(523,'square',.18,.005,.015,.1,.06,.03); setTimeout(()=>tone(784,'square',.16,.005,.015,.08,.06,.03),120); },
+  'arcade-go':        () => chord([523,659,784,1047],'square',.16,.003,.01,.08,.05,.03,35),
+  'arcade-high-score':() => chord([523,659,784,1047,1319,1568],'square',.14,.004,.012,.1,.06,.04,55),
+  'arcade-game-over': () => descend([400,350,300,200],'square',.14,.008,.025,.15,.1,.06,120),
+  'arcade-continue':  () => tone(600,'square',.15,.003,.01,.06,.04,.02),
+  'arcade-credit':    () => { bandNoise(.15,.015,6000,12); setTimeout(()=>tone(1319,'sine',.12,.003,.01,.06,.04,.02),25); },
+  'arcade-bonus-round':() => { for(let i=0;i<8;i++) setTimeout(()=>tone(400+i*75,'square',.12-i*.01,.002,.006,.04,.03,.01),i*30); },
+  'arcade-time-warning':() => [0,80,160].forEach(d=>setTimeout(()=>tone(880,'square',.14,.002,.005,.03,.02,.01),d)),
+  'arcade-perfect':   () => chord([784,1047,1319,1568],'sine',.16,.005,.02,.15,.1,.05,40),
+  'arcade-combo-x2':  () => { [659,784].forEach((f,i)=>setTimeout(()=>tone(f,'square',.14,.002,.008,.06,.04,.02),i*40)); setTimeout(()=>[880,1047].forEach((f,i)=>setTimeout(()=>tone(f,'square',.12,.002,.008,.05,.04,.02),i*40)),100); },
+  'arcade-combo-x3':  () => [659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'square',.14-i*.02,.002,.008,.06,.04,.02),i*45)),
+  'arcade-combo-x4':  () => [659,784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,'square',.14-i*.02,.002,.006,.05,.03,.01),i*35)),
+  'arcade-whack':     () => { bandNoise(.35,.025,3000,6); tone(180,'square',.2,.003,.01,.05,.04,.02); },
+  'arcade-miss-target':() => descend([500,350,200],'square',.12,.005,.015,.08,.06,.03,50),
+  'arcade-jackpot':   () => chord([392,523,659,784,1047,1319,1568],'square',.15,.004,.015,.12,.08,.05,50),
+  'arcade-ticket':    () => [0,40,80,120,160].forEach(d=>setTimeout(()=>bandNoise(.12,.01,4000,10),d)),
+  'arcade-siren':     () => { tone(800,'square',.12,.005,.01,.05,.03,.02); setTimeout(()=>tone(600,'square',.12,.005,.01,.05,.03,.02),100); setTimeout(()=>tone(800,'square',.1,.005,.01,.05,.03,.02),200); },
+
+  // ── NOSTALGIA (16) ──
+  'dial-up':          () => { sweep(.06,.15,300,2500); setTimeout(()=>bandNoise(.08,.1,1800,3),150); setTimeout(()=>sweep(.05,.1,1000,3500),280); },
+  'floppy-read':      () => [0,50,100,150,200].forEach(d=>setTimeout(()=>bandNoise(.08,.015,3500,8),d)),
+  'crt-on':           () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(60),t);o.frequency.linearRampToValueAtTime(fs(15700),t+.15);g.gain.setValueAtTime(.08*globalVol,t);g.gain.linearRampToValueAtTime(.03*globalVol,t+.15);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.35); noise(.04,.05,2000); },
+  'crt-off':          () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(15700),t);o.frequency.exponentialRampToValueAtTime(fs(40),t+.12);g.gain.setValueAtTime(.06*globalVol,t);g.gain.exponentialRampToValueAtTime(.001,t+.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.2); bandNoise(.1,.01,5000,12); },
+  'typewriter-key':   () => { bandNoise(.25,.012,4000,10); setTimeout(()=>tone(2200,'sine',.04,.001,.005,.03,.02,.01),12); },
+  'typewriter-bell':  () => { initAudio();const t=now();[2637,5274,7911].forEach((fr,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(fr),t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime([.2,.1,.05][i]*globalVol,t+.005);g.gain.exponentialRampToValueAtTime(.001,t+.8);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+1)}); },
+  'cassette-play':    () => { bandNoise(.08,.02,3000,6); setTimeout(()=>noise(.02,.1,800),25); },
+  'cassette-rewind':  () => sweep(.1,.2,500,6000),
+  'vhs-insert':       () => { bandNoise(.15,.04,800,3); setTimeout(()=>bandNoise(.1,.03,1200,4),50); },
+  'vinyl-scratch':    () => sweep(.15,.08,4000,500),
+  'vinyl-crackle':    () => { for(let i=0;i<6;i++) setTimeout(()=>bandNoise(.04,.005,3000+Math.random()*3000,15),i*30+Math.random()*20); },
+  'pager-beep':       () => { tone(1000,'square',.15,.003,.01,.05,.03,.01); setTimeout(()=>tone(1200,'square',.12,.003,.01,.05,.03,.01),70); },
+  'nokia-beep':       () => [659,659,587,659,523].forEach((f,i)=>setTimeout(()=>tone(f,'square',.1,.002,.008,.06,.03,.02),i*80)),
+  'camera-shutter':   () => { bandNoise(.3,.008,6000,15); setTimeout(()=>bandNoise(.2,.012,3000,8),12); },
+  'film-advance':     () => [0,25,50,75].forEach(d=>setTimeout(()=>bandNoise(.1,.008,5000,12),d)),
+  'projector-click':  () => [0,60,120,180,240].forEach(d=>setTimeout(()=>bandNoise(.06,.006,4500,10),d)),
+
+  // ── LOOPS (12) ──
+  'loop-loading':     () => [0,200,400].forEach((d,i)=>setTimeout(()=>tone(500+i*80,'sine',.05,.01,.02,.15,.08,.04),d)),
+  'loop-processing':  () => [0,120,240,360,480].forEach(d=>setTimeout(()=>bandNoise(.06,.015,3000,8),d)),
+  'loop-recording':   () => { tone(440,'sine',.06,.01,.02,.15,.06,.03); setTimeout(()=>tone(440,'sine',.04,.01,.02,.1,.06,.03),300); },
+  'loop-connecting':  () => { sweep(.05,.15,400,1200); setTimeout(()=>sweep(.04,.15,1200,400),200); },
+  'loop-scanning':    () => sweep(.06,.3,300,3000),
+  'loop-streaming':   () => noise(.03,.5,1200),
+  'loop-syncing':     () => { tone(600,'sine',.05,.005,.01,.1,.05,.02); setTimeout(()=>tone(750,'sine',.04,.005,.01,.08,.05,.02),200); },
+  'loop-uploading':   () => [400,500,600].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.04,.003,.008,.06,.03,.02),i*100)),
+  'loop-downloading': () => [600,500,400].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.04,.003,.008,.06,.03,.02),i*100)),
+  'loop-buffering':   () => { tone(500,'sine',.05,.005,.01,.08,.04,.02); setTimeout(()=>tone(500,'sine',.03,.005,.01,.05,.04,.02),80); setTimeout(()=>tone(500,'sine',.05,.005,.01,.08,.04,.02),250); },
+  'loop-thinking':    () => [0,150,300].forEach((d,i)=>setTimeout(()=>tone(400+Math.random()*200,'sine',.03,.008,.015,.1,.06,.03),d)),
+  'loop-heartbeat':   () => { tone(80,'sine',.15,.005,.02,.1,.06,.03); setTimeout(()=>tone(60,'sine',.12,.005,.02,.08,.06,.03),120); },
+
+  // ── SELECTION (8) ──
+  'select':           () => tone(700,'sine',.15,.005,.015,.25,.08,.04),
+  'deselect':         () => tone(550,'sine',.1,.005,.015,.15,.08,.04),
+  'check':            () => { bandNoise(.12,.008,5000,12); setTimeout(()=>tone(900,'sine',.1,.003,.01,.15,.06,.03),10); },
+  'uncheck':          () => { bandNoise(.08,.006,4000,10); setTimeout(()=>tone(700,'sine',.07,.003,.01,.1,.06,.03),10); },
+  'expand':           () => { tone(400,'sine',.1,.005,.015,.2,.08,.04); setTimeout(()=>tone(550,'sine',.08,.005,.015,.15,.08,.04),50); },
+  'collapse':         () => { tone(550,'sine',.08,.005,.015,.15,.08,.04); setTimeout(()=>tone(400,'sine',.1,.005,.015,.2,.08,.04),50); },
+  'redo':             () => chord([400,500,600],'sine',.1,.01,.02,.3,.1,.05,80),
+  'reaction':         () => tone(1300,'sine',.12,.003,.008,.1,.05,.02),
+
+  // ── PROGRESS (10) ──
+  'start':            () => { tone(440,'sine',.12,.008,.02,.25,.1,.05); setTimeout(()=>tone(554,'sine',.1,.008,.02,.2,.1,.05),70); },
+  'progress-step':    () => tone(800,'sine',.06,.003,.008,.1,.04,.02),
+  'queued':           () => tone(500,'sine',.08,.008,.02,.2,.1,.05),
+  'checkpoint':       () => chord([523,659],'sine',.12,.006,.02,.25,.1,.05,50),
+  'retry':            () => { sweep(.08,.05,2000,800); setTimeout(()=>tone(600,'sine',.08,.005,.015,.15,.08,.04),60); },
+  'blocked':          () => { tone(200,'square',.12,.005,.02,.1,.06,.03); setTimeout(()=>tone(180,'square',.1,.005,.02,.08,.06,.03),70); },
+  'resume':           () => chord([440,554,659],'sine',.1,.006,.02,.25,.1,.05,50),
+  'processing':       () => [0,100,200].forEach((d,i)=>setTimeout(()=>bandNoise(.05,.02,2500+i*500,6),d)),
+  'streaming':        () => noise(.03,.3,1500),
+  'pipeline':         () => { bandNoise(.08,.01,4000,10); setTimeout(()=>tone(800,'sine',.06,.003,.008,.08,.04,.02),15); },
+
+  // ── REWARD (10) ──
+  'reward':           () => chord([784,1047,1319],'sine',.14,.005,.02,.2,.1,.04,40),
+  'streak':           () => { for(let i=0;i<4;i++) setTimeout(()=>tone(600+i*100,'sine',.1-i*.015,.003,.01,.08,.05,.02),i*45); },
+  'rank-up':          () => chord([392,523,659,784,1047],'sine',.15,.006,.025,.3,.15,.08,55),
+  'daily-bonus':      () => chord([659,784,1047,1319],'sine',.12,.005,.02,.2,.1,.05,45),
+  'multiplier':       () => { for(let i=0;i<5;i++) setTimeout(()=>tone(800+i*150,'sine',.1,.002,.006,.05,.03,.01),i*30); },
+  'treasure':         () => { initAudio();const t=now();[1047,1319,1568,2093].forEach((fr,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(fr),t+i*.05);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12*globalVol*(1-i*.15),t+i*.05+.005);g.gain.exponentialRampToValueAtTime(.001,t+i*.05+.3);o.connect(g);g.connect(masterGain);o.start(t+i*.05);o.stop(t+i*.05+.4)}); },
+  'gift':             () => { sweep(.08,.06,2000,4000); setTimeout(()=>chord([784,1047,1319],'sine',.1,.004,.015,.12,.08,.03,35),70); },
+  'crown':            () => chord([392,523,659,784],'sine',.16,.008,.03,.35,.15,.08,65),
+  'prestige':         () => chord([261,392,523,659,784],'sine',.14,.01,.04,.4,.2,.1,70),
+  'jackpot':          () => chord([523,659,784,1047,1319,1568,2093],'sine',.15,.005,.02,.25,.12,.06,45),
+
+  // ── HEALTH (10) ──
+  'heartbeat':        () => { tone(60,'sine',.2,.01,.03,.15,.08,.04); setTimeout(()=>tone(50,'sine',.15,.01,.03,.1,.08,.04),150); },
+  'breathe-in':       () => sweep(.06,.5,200,800),
+  'breathe-out':      () => sweep(.05,.6,800,200),
+  'meditation-bell':  () => { initAudio();const t=now();[528,1056,1584,2640].forEach((fr,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(fr),t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime([.2,.12,.06,.03][i]*globalVol,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+2+i*.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+3)}); },
+  'timer-tick':       () => tone(1000,'sine',.03,.001,.005,.03,.02,.01),
+  'timer-complete':   () => chord([523,659,784],'sine',.12,.01,.03,.35,.15,.08,70),
+  'mood-positive':    () => chord([523,659,784],'sine',.08,.01,.03,.3,.15,.08,60),
+  'mood-neutral':     () => tone(440,'sine',.06,.01,.03,.25,.12,.06),
+  'mood-negative':    () => descend([440,392,349],'sine',.06,.01,.03,.2,.12,.06,60),
+  'hydration':        () => { tone(800,'sine',.08,.003,.01,.05,.04,.02); setTimeout(()=>tone(1000,'sine',.06,.003,.01,.04,.04,.02),40); setTimeout(()=>tone(1200,'sine',.05,.003,.01,.03,.04,.02),70); },
+
+  // ── EDUCATION (10) ──
+  'correct-answer':   () => chord([659,784,1047],'sine',.14,.005,.02,.2,.1,.05,45),
+  'wrong-answer':     () => { tone(300,'sine',.08,.008,.03,.15,.1,.05); setTimeout(()=>tone(280,'sine',.06,.008,.03,.1,.1,.05),100); },
+  'hint':             () => { initAudio();const t=now();[1568,2093,2637].forEach((fr,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(fr),t+i*.06);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08*globalVol*(1-i*.2),t+i*.06+.005);g.gain.exponentialRampToValueAtTime(.001,t+i*.06+.2);o.connect(g);g.connect(masterGain);o.start(t+i*.06);o.stop(t+i*.06+.25)}); },
+  'quiz-start':       () => chord([523,659,784,1047],'sine',.15,.005,.02,.2,.1,.05,40),
+  'quiz-end':         () => chord([784,659,523],'sine',.12,.008,.03,.3,.15,.08,60),
+  'lesson-complete':  () => chord([392,523,659,784,1047],'sine',.14,.006,.025,.3,.12,.06,50),
+  'streak-study':     () => { for(let i=0;i<4;i++) setTimeout(()=>tone(523+i*80,'sine',.08,.003,.01,.08,.04,.02),i*50); },
+  'flashcard-flip':   () => sweep(.12,.06,3000,800),
+  'bookmark-add':     () => { tone(700,'sine',.1,.005,.015,.2,.08,.04); setTimeout(()=>tone(880,'sine',.08,.005,.015,.15,.08,.04),50); },
+  'new-concept':      () => { tone(1047,'sine',.1,.005,.015,.15,.08,.04); setTimeout(()=>chord([1047,1319,1568],'sine',.08,.004,.012,.1,.06,.03,35),60); },
+
+  // ── DEVOPS (10) ──
+  'build-start':      () => { tone(350,'sine',.1,.008,.02,.2,.08,.04); setTimeout(()=>tone(440,'sine',.08,.008,.02,.15,.08,.04),80); },
+  'build-pass':       () => chord([523,659,784],'sine',.14,.005,.02,.25,.1,.05,45),
+  'build-fail':       () => { tone(250,'sawtooth',.12,.005,.02,.15,.08,.04); setTimeout(()=>tone(200,'sawtooth',.1,.005,.02,.1,.08,.04),80); },
+  'deploy-start':     () => chord([300,400,500,600],'sine',.08,.008,.02,.2,.1,.05,60),
+  'deploy-success':   () => chord([523,659,784,1047],'sine',.15,.006,.025,.3,.12,.06,50),
+  'deploy-fail':      () => { tone(200,'square',.12,.005,.02,.1,.06,.03); setTimeout(()=>tone(150,'square',.1,.005,.02,.08,.06,.03),100); setTimeout(()=>tone(120,'square',.08,.005,.02,.06,.06,.03),200); },
+  'test-pass':        () => { bandNoise(.08,.006,5000,12); setTimeout(()=>tone(880,'sine',.08,.003,.01,.1,.05,.03),10); },
+  'test-fail':        () => { bandNoise(.08,.006,3000,8); setTimeout(()=>tone(300,'sine',.08,.005,.015,.1,.06,.03),10); },
+  'commit':           () => { bandNoise(.12,.01,4000,10); setTimeout(()=>tone(600,'sine',.08,.005,.01,.1,.05,.03),15); },
+  'merge':            () => { tone(500,'sine',.08,.005,.015,.15,.08,.04); tone(700,'sine',.08,.005,.015,.15,.08,.04); setTimeout(()=>tone(600,'sine',.1,.005,.02,.2,.1,.05),80); },
+
+  // ── ACCESSIBILITY (8) ──
+  'focus-ring':       () => tone(1100,'sine',.05,.003,.008,.08,.04,.02),
+  'tab-navigate':     () => { tone(800,'sine',.06,.002,.006,.06,.03,.02); setTimeout(()=>tone(900,'sine',.04,.002,.006,.04,.03,.02),30); },
+  'screen-reader-enter':() => tone(600,'sine',.08,.005,.015,.15,.08,.04),
+  'screen-reader-exit':() => tone(500,'sine',.06,.005,.015,.1,.06,.03),
+  'landmark':         () => tone(1000,'sine',.06,.003,.01,.08,.05,.02),
+  'skip-link':        () => sweep(.1,.05,800,2000),
+  'aria-expand':      () => { tone(500,'sine',.08,.005,.012,.12,.06,.03); setTimeout(()=>tone(650,'sine',.06,.005,.012,.1,.06,.03),40); },
+  'aria-alert':       () => { tone(800,'sine',.1,.005,.015,.15,.08,.04); setTimeout(()=>tone(800,'sine',.08,.005,.015,.1,.08,.04),120); },
+
+  // ── IOT (10) ──
+  'device-pair':      () => { tone(500,'sine',.1,.005,.015,.2,.08,.04); setTimeout(()=>tone(600,'sine',.08,.005,.015,.15,.08,.04),60); setTimeout(()=>tone(700,'sine',.1,.005,.015,.2,.1,.05),120); },
+  'device-unpair':    () => { tone(700,'sine',.1,.005,.015,.2,.08,.04); setTimeout(()=>tone(600,'sine',.08,.005,.015,.15,.08,.04),60); setTimeout(()=>tone(500,'sine',.06,.005,.015,.1,.08,.04),120); },
+  'sensor-trigger':   () => tone(1200,'sine',.1,.002,.008,.08,.04,.02),
+  'sensor-clear':     () => tone(800,'sine',.06,.005,.015,.1,.06,.03),
+  'firmware-update':  () => [0,100,200,300].forEach((d,i)=>setTimeout(()=>tone(500+i*50,'sine',.04,.003,.008,.06,.03,.02),d)),
+  'battery-low':      () => descend([600,500,400],'sine',.08,.005,.015,.1,.06,.03,80),
+  'battery-full':     () => chord([523,659,784],'sine',.1,.006,.02,.25,.1,.05,50),
+  'thermostat-up':    () => { tone(500,'sine',.06,.005,.015,.12,.06,.03); setTimeout(()=>tone(600,'sine',.08,.005,.015,.15,.08,.04),50); },
+  'thermostat-down':  () => { tone(600,'sine',.08,.005,.015,.15,.08,.04); setTimeout(()=>tone(500,'sine',.06,.005,.015,.12,.06,.03),50); },
+  'smart-home':       () => chord([440,554,659],'sine',.08,.008,.02,.2,.1,.05,55),
+
+  // ── CINEMATIC (10) ──
+  'dramatic-reveal':  () => { initAudio();const t=now();[130.81,261.63,392,523.25].forEach((fr,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(fr),t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime([.15,.12,.1,.08][i]*globalVol,t+.05+i*.04);g.gain.exponentialRampToValueAtTime(.001,t+1+i*.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+1.5)}); },
+  'suspense':         () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(100),t);o.frequency.linearRampToValueAtTime(fs(120),t+.8);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08*globalVol,t+.3);g.gain.setValueAtTime(.08*globalVol,t+.5);g.gain.linearRampToValueAtTime(0,t+.8);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.9); },
+  'plot-twist':       () => { tone(440,'sine',.12,.01,.03,.3,.1,.06); setTimeout(()=>tone(466,'sine',.14,.01,.03,.35,.12,.08),150); },
+  'flashback':        () => sweep(.08,.4,3000,300),
+  'time-lapse':       () => { for(let i=0;i<6;i++) setTimeout(()=>bandNoise(.04,.008,4000,10),i*50); sweep(.03,.35,500,1500); },
+  'zoom-dramatic':    () => sweep(.12,.2,100,2000),
+  'fade-to-black':    () => { initAudio();const t=now(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(300),t);o.frequency.linearRampToValueAtTime(fs(200),t+.6);g.gain.setValueAtTime(.1*globalVol,t);g.gain.linearRampToValueAtTime(0,t+.6);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+.7); },
+  'title-card':       () => chord([261.63,392,523.25,659.25],'sine',.14,.01,.04,.4,.2,.1,70),
+  'credits-roll':     () => chord([392,523,659],'sine',.1,.01,.04,.4,.2,.12,80),
+  'the-end':          () => { initAudio();const t=now();[261.63,329.63,392,523.25].forEach((fr,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(fs(fr),t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime([.12,.1,.08,.06][i]*globalVol,t+.05+i*.03);g.gain.setValueAtTime([.12,.1,.08,.06][i]*globalVol,t+.5);g.gain.linearRampToValueAtTime(0,t+1.2);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+1.5)}); },
 };
 
 // ===== PUBLIC API =====
