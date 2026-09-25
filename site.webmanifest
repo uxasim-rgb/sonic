@@ -1,11 +1,11 @@
 {
   "name": "Sonic",
   "short_name": "Sonic",
-  "description": "700 UI sounds from pure code",
+  "description": "850+ UI sounds from pure code",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
-  "theme_color": "#FF5273",
+  "theme_color": "#0a0a0a",
   "icons": [
     {
       "src": "/favicon-192.png",
